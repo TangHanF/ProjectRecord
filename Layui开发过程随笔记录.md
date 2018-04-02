@@ -125,6 +125,78 @@
 - **Tab选项卡**
 
 # Tab相关
+- 在子窗体动态为父窗体增加tab选项卡
+    > 简单的例子，父窗体已经创建好了选项卡，我们暂且使用官方提供的模板吧，然后再第一个选项卡加一个按钮，这个按钮就是触发弹窗的，然后弹窗加载一个html页面，这个页面里面再定一个按钮，叫做“动态增加选项卡”，然后点击这个按钮时父窗体的tab选项卡动态新增。
+
+    父窗体html（简写）:
+
+    ```
+    <div class="layui-tab" lay-filter="tabDemo">
+        <ul class="layui-tab-title">
+            <li class="layui-this">网站设置</li>
+            <li>用户管理</li>
+            <li>权限分配</li>
+            <li>商品管理</li>
+            <li>订单管理</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <button id="openChildWindow" class="layui-btn layui-btn-normal">弹窗</button>
+            </div>
+            <div class="layui-tab-item">内容2</div>
+            <div class="layui-tab-item">内容3</div>
+            <div class="layui-tab-item">内容4</div>
+            <div class="layui-tab-item">内容5</div>
+        </div>
+    </div>
+    ```
+    父窗体js逻辑（简写）：
+    ```
+    $("#openChildWindow").click(function () {
+        layer.open({
+            type: 2,// 定义为iFrame弹出层
+            title: "测试窗口，为父类动态添加tab",// 窗口标题
+            shadeClose: true,//
+            anim: 0,// 动画。0：平滑放大 1：从上掉落 2：从最底部往上滑入 3：从左滑入 4：从左翻滚 5：渐显 6：抖动
+            maxmin: true, // 开启最大化最小化按钮
+            shadeClose: false,// 是否点击遮罩关闭
+            resize: true,// 是否允许拉伸
+            content: "Child.html"// 内容（String/DOM/Array，默认：''）
+            , end: function () {
+
+            }
+        });
+    });
+    ```
+    --------------
+
+    子窗体html（简写）：
+    ```
+    $("#btnAdd").click(function () {
+        debugger
+        window.parent.layui.element.tabAdd('tabDemo',  {
+            title: '选项卡的标题'
+            ,content: '选项卡的内容' //支持传入html
+            ,id: '选项卡标题的lay-id属性值'
+        });
+    });
+    ```
+    
+    子窗体js逻辑（简写）：
+    ```
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="btnAdd">动态增加选项卡</button>
+        </div>
+    </div>
+    ```
+-------
+
+**以上的重点就是：`window.parent.layui.element.tabAdd`**
+
+
+
+
 
 
 # 弹窗相关
