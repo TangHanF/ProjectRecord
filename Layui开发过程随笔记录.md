@@ -1,15 +1,8 @@
 ## ==========开发随笔==========
 
+# 数据表格相关
 - **表格顶部【删除已选】：$('.layui-btn[data-type="delSelected"]')**
 - **分页的【确定】按钮：$(".layui-laypage-btn")**
-- **机构弹出框选择的自定义行内操作按钮定义：**
-
-    ```
-        <script type="text/html" id="tableToolBar_tpl">
-            <a class="layui-btn  layui-btn-xs" funName="{funName}" id="id_Choose" lay-event="InstitutionChoose">{btnName}</a>
-        </script>
-    ```
-
 - **数据表格内是否显示操作按钮控制开关**
 
     - `config.isShowInLineOperationTool=true|false`
@@ -17,7 +10,8 @@
 - **数据表格内是否显示数据表格行内复选框按钮开关**
 
     - `config.isShowTableCheckbox = true|false`
-- **对于数据表配置的加载时隐藏的字段可在js逻辑进行设置后强制显示：`config.forceShowField=["insId"]`,将要强制加载显示的id放在一个数组中即可**
+- **对于数据表配置的加载时隐藏的字段可在js逻辑进行设置后强制显示：`config.forceShowField=["insId"]`,将要强制加载显示的id放在一个数组中即可** （注意:这是我自己项目相关的，可忽略）
+
 
 - **数据表格table选择**
 
@@ -39,6 +33,8 @@
             body{overflow-y: scroll;}
         ```
     > 总体而言，table 列宽自适应出现横向滚动条的几率一般是比较小的，主要原因是 table 的渲染有时会在浏览器纵向滚动条出现之前渲染完毕，这时 table 容器会被强制减少滚动条宽度的差（一般是 17px），导致 table 的横向滚动条出现。建议强制给你的页面显示出纵向滚动条。
+
+# switch开关相关
 
 - **switch开关必须放在form表单中，否则渲染失败，看不出效果**，例如：
 
@@ -112,8 +108,10 @@
     ```
     <input type="checkbox" id="isPrimaryKey" name="isPrimaryKey" value="true" lay-skin="switch" lay-filter="isPrimaryKey" lay-text="是|否">
     ```
-        
-- select下拉框通过设置 selected=""可以设置当前选择项，例如:
+
+# 下拉框相关
+
+- **select下拉框通过设置 selected=""可以设置当前选择项，例如:**
 
     ```
         <select>
@@ -123,3 +121,24 @@
             <option value="3">3</option>
         </select>
     ```
+
+- **Tab选项卡**
+
+# Tab相关
+
+
+# 弹窗相关
+- **机构弹出框选择的自定义行内操作按钮定义：**
+
+    ```
+        <script type="text/html" id="tableToolBar_tpl">
+            <a class="layui-btn  layui-btn-xs" funName="{funName}" id="id_Choose" lay-event="InstitutionChoose">{btnName}</a>
+        </script>
+    ```
+
+# 其它
+
+
+
+
+    
