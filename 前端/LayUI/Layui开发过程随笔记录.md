@@ -240,7 +240,7 @@
 
 - **为Tab选项卡加入：关闭当前、关闭其它、关闭所有操作**
 
-    > 因内容较多，详细内容请移步：[]()
+    > 因内容较多，详细内容请移步：[点击此处查看](https://github.com/TangHanF/ProjectRecord/blob/master/%E5%89%8D%E7%AB%AF/LayUI/%E4%B8%BALayui%E7%9A%84Tab%E9%80%89%E9%A1%B9%E5%8D%A1%E5%A2%9E%E5%8A%A0%E5%85%B3%E9%97%AD%E5%BD%93%E5%89%8D%E3%80%81%E5%85%B3%E9%97%AD%E5%85%B6%E5%AE%83%E6%93%8D%E4%BD%9C.md)
 
 
 
