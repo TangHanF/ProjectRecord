@@ -253,7 +253,50 @@
             <a class="layui-btn  layui-btn-xs" funName="{funName}" id="id_Choose" lay-event="InstitutionChoose">{btnName}</a>
         </script>
     ```
+ # Layui数据存储
+ **官方说明：**
+ > - localStorage 持久化存储：layui.data(table, settings)，数据会永久存在，除非物理删除。
+ >- sessionStorage 会话性存储：layui.sessionData(table, settings)，页面关闭后即失效。注：layui 2.2.5 新增
 
+上述两个方法的使用方式是完全一样的。其中参数 table 为表名，settings是一个对象，用于设置key、value。下面与 layui.data 方法为例：
+```
+//【增】：向test表插入一个nickname字段，如果该表不存在，则自动建立。
+layui.data('test', {
+  key: 'nickname'
+  ,value: '贤心'
+});
+ 
+//【删】：删除test表的nickname字段
+layui.data('test', {
+  key: 'nickname'
+  ,remove: true
+});
+layui.data('test', null); //删除test表
+  
+//【改】：同【增】，会覆盖已经存储的数据
+  
+//【查】：向test表读取全部的数据
+var localTest = layui.data('test');
+console.log(localTest.nickname); //获得“贤心”
+```
+
+ **多值存储示例：**
+ ```
+ layui.data('cate', {
+  key: 'data'
+  ,value: [{
+    key: 'id'
+    ,value: 1
+  },{
+    key: 'name'
+    ,value: 'abc'
+  }]
+});
+
+//取值
+var cate = layui.data('cate');
+console.log(cate.data)
+ ```
 # 其它
 
 

@@ -1,14 +1,22 @@
 
-# 特别说明，跟教程已更新，请移步：[此处]()
-----
 
 - 首先管理端模板的话还是使用官方提供的，参考链接：[点此打开后台布局页面](http://www.layui.com/demo/layuiAdmin.html)
 
 - 以下我只列举出关键代码，各位根据实际情况拷贝到自己项目适当位置
-- 目前仅仅加入了：关闭当前、关闭所有，各位可以继续扩展，例如关闭左侧所有、关闭右侧所有、关闭其它，不是很难，循环判断即可。当然了，后面有时间我也会完善一下此功能
+- 相比上一篇教程([点击此处查阅]())来说，此次除了：
+    - 关闭当前
+    - 关闭所有
+    
+    之外，又新增了：
+    - 关闭非当前
+    - 关闭左侧所有
+    - 关闭右侧所有
 
+    同时又对代码逻辑进行了优化处理。
+
+    你会发现关闭左侧所有、关闭右侧所有真的很简单，其实就是**把所有已打开的Tab的ID放入一个集合，而且我也能拿到当前激活的Tab的ID值，所以我不是通过遍历处理，而是想着截取数据的形式处理**。下面代码可以好好观察一下，顿时就简单多了
 # 效果图
-![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/tab右键菜单.png)
+![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/tab右键菜单2.0.png)
 
 ----------
 # HTML
@@ -17,9 +25,13 @@
     <ul class="rightmenu">
         <li data-type="closethis">关闭当前</li>
         <li data-type="closeall">关闭所有</li>
+        <li data-type="closeothers">关闭非当前</li>
+        <li data-type="closeleft">关闭左侧所有</li>
+        <li data-type="closeright">关闭右侧所有</li>
+        <li data-type="cancel"><i class="layui-icon layui-icon-yinshenim"></i>取消</li>
     </ul>
 ```
-    我们暂且就实现两个功能吧，其它功能自行扩展即可。相关CSS样式请看下面《CSS样式》部分
+    相关CSS样式请看下面《CSS样式》部分
 
 
 -------
@@ -28,19 +40,41 @@
 
 ```
 /**
-* 注册tab右键菜单点击事件
-*/
+    * 注册tab右键菜单点击事件
+    */
 $(".rightmenu li").click(function () {
-    if ($(this).attr("data-type") == "closethis") {
-        var tabid = $("li[class='layui-this']").attr('lay-id');// 获取当前激活的选项卡ID
-        tabDelete(tabid);
-    } else if ($(this).attr("data-type") == "closeall") {
-        var tabtitle = $(".layui-tab-title li");
-        var ids = new Array();
-        $.each(tabtitle, function (i) {
-            ids[i] = $(this).attr("lay-id");
-        })
-        tabDeleteAll(ids);
+    var currentActiveTabID = $("li[class='layui-this']").attr('lay-id');// 获取当前激活的选项卡ID
+    var tabtitle = $(".layui-tab-title li");
+    var allTabIDArr = [];
+    $.each(tabtitle, function (i) {
+        allTabIDArr[i] = $(this).attr("lay-id");
+    })
+
+    switch ($(this).attr("data-type")) {
+        case "closethis"://关闭当前，如果开始了tab可关闭，实际意义不大
+            tabDelete(currentActiveTabID);
+            break;
+        case "closeall"://关闭所有
+            tabDeleteAll(allTabIDArr);
+            break;
+        case "closeothers"://关闭非当前
+            $.each(allTabIDArr, function (i) {
+                var tmpTabID = allTabIDArr[i];
+                if (currentActiveTabID != tmpTabID)
+                    tabDelete(tmpTabID);
+            })
+            break;
+        case "closeleft"://关闭左侧全部
+            var index = allTabIDArr.indexOf(currentActiveTabID);
+            tabDeleteAll(allTabIDArr.slice(0, index));
+            break;
+        case "closeright"://关闭右侧全部
+            var index = allTabIDArr.indexOf(currentActiveTabID);
+            tabDeleteAll(allTabIDArr.slice(index + 1));
+            break;
+        default:
+            $('.rightmenu').hide();
+
     }
     $('.rightmenu').hide();
 })
@@ -71,7 +105,7 @@ $(document).click(function () {
 * @constructor
 */
 function CustomRightClick () {
-    //屏蔽右键
+    //屏蔽Tab右键菜单
     $('.layui-tab-title li').on('contextmenu', function () {
         return false;
     })
