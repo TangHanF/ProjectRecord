@@ -3,6 +3,7 @@
 - 首先管理端模板的话还是使用官方提供的，参考链接：[点此打开后台布局页面](http://www.layui.com/demo/layuiAdmin.html)
 
 - 以下我只列举出关键代码，各位根据实际情况拷贝到自己项目适当位置
+- 目前仅仅加入了：关闭当前、关闭所有，各位可以继续扩展，例如关闭左侧所有、关闭右侧所有、关闭其它，不是很难，循环判断即可。当然了，后面有时间我也会完善一下此功能
 
 # 效果图
 ![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/tab右键菜单.png)
