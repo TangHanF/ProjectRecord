@@ -5,7 +5,7 @@
 - 以下我只列举出关键代码，各位根据实际情况拷贝到自己项目适当位置
 
 # 效果图
-https://github.com/TangHanF/ProjectRecord/raw/master/
+![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/tab右键菜单.png)
 
 ----------
 # HTML
