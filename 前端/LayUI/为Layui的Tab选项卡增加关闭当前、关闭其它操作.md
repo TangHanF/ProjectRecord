@@ -116,3 +116,7 @@ function CustomRightClick () {
     }
 </style>
 ```
+
+
+# 问题
+- 右击关闭暂时只能关闭当前已经激活的Tab，没法在任意一个Tab右击自动激活再去关闭，各位可优化一下
