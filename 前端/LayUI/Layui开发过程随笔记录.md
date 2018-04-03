@@ -122,7 +122,51 @@
         </select>
     ```
 
-- **Tab选项卡**
+- **下拉框赋值**
+    使用:`$("#下拉框ID值").val("数据")`即可，最后记得form.render()重新渲染一下。
+
+- **通过jQuery的find方法返回的下拉框类型**
+    
+    返回值：`select-one`
+
+    例如：
+
+    JS：
+    ```
+        var selectArray = $("#selectContent").find("select");// 返回selectContent里面所有下拉框对象集合
+    ```
+    HTML：
+    ```
+        <div id="selectContent">
+            <select id="id_ValiteType" name="valiteType">
+                <option value="no">不验证</option>
+                <option value="date">日期</option>
+            </select>
+        </div>
+    ```
+
+    ----
+    这样 selectArray数组里面都是下拉框的对象，每一个对象的type值是：`select-one`，然后各位就可以通过类型判断各自发挥了。
+
+# Form表单
+- **表单提交监听**
+
+    - 语法：`form.on('submit(filter)', callback)`
+
+        例如：
+        ```
+        form.on('submit(formDemo)', function (data){
+
+        });
+        ```
+
+    - 阻止表单提交后跳转
+        ```
+        form.on('submit(formDemo)', function (data){
+
+            return false;// 只需要返回false即可
+        });
+        ```
 
 # Tab相关
 - **在子窗体动态为父窗体增加tab选项卡**
