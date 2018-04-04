@@ -298,8 +298,39 @@ var cate = layui.data('cate');
 console.log(cate.data)
  ```
 # 其它
+- **注意字符串类型的属性**
+    例如：
+    ```
+    element.tabAdd('demo', {
+        title: '选项卡的标题'
+        ,content: '选项卡的内容' //支持传入html
+        ,id: '选项卡标题的lay-id属性值'
+    }); 
 
+     element.tabChange('nav导航ID', "选项卡标题的lay-id属性值");            
+      
+    ```
+    以上新增一个选项卡，新增完成要切换到选项卡，但是因为不小心用了数字作为id导致切换失败，代码如下：
+    ```
+    element.tabAdd('main-tab', {
+        title: title,
+        content: '<iframe id="' + 0 + '" src="' + url + '" class="layui-tab-iframe"></iframe>',
+        id: 0
+    });
 
+    element.tabChange('main-tab', 0);
+    ```
+    改成：
+    ```
+    element.tabAdd('main-tab', {
+        title: title,
+        content: '<iframe id="' + 0 + '" src="' + url + '" class="layui-tab-iframe"></iframe>',
+        id: "0"
+    });
+
+    element.tabChange('main-tab', "0");
+    ```   
+    之后就可以。所以，注意看文档！
 
 
     
