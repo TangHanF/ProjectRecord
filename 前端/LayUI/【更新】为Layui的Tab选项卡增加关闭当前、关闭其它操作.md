@@ -22,7 +22,7 @@
 ----------
 # HTML
 首先在body里面插入以下一段html:
-```
+``` html
     <ul class="rightmenu">
         <li data-type="closethis">关闭当前</li>
         <li data-type="closeall">关闭所有</li>
@@ -39,7 +39,7 @@
 
 # JS
 
-```
+``` javascript
 /**
     * 注册tab右键菜单点击事件
     */
@@ -81,7 +81,7 @@ $(".rightmenu li").click(function () {
 })
 ```
 --------------------
-```
+``` javascript
 tabDelete = function (id) {
     console.log("删除的TabID："+id)
     element.tabDelete("你的Tab选项卡ID", id);//删除
@@ -92,15 +92,18 @@ tabDeleteAll = function (ids) {
     })
 }
 ```
+
 --------------------
-```
+
+``` javascript
 // 点击空白处关闭右键弹窗
 $(document).click(function () {
     $('.rightmenu').hide();
 })
 ```
 ----------------
-```
+
+``` javascript
 /**
 * 绑定右键菜单
 * @constructor
@@ -125,7 +128,7 @@ function CustomRightClick () {
 
 -------
 # CSS样式
-```
+``` css
 <style>
     /**右键菜单*/
     .rightmenu {

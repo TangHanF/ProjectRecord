@@ -15,7 +15,7 @@
 
 - **数据表格table选择**
 
-    ```
+    ``` javascript
         var checkStatus = table.checkStatus('tableID')
         var data = checkStatus.data;
     ```
@@ -23,13 +23,13 @@
 - **数据表格列宽自适应出现横向滚动条的解决方案**
     1. 如果 table 是在 layui 的后台布局容器中（注意：不是在 iframe 中），在你的页面加上这段 CSS：
 
-        ```
+        ``` css
             .layui-body{overflow-y: scroll;}
         ```
 
     2. 如果 table 是在独立的页面，在你的页面加上这段 CSS：
 
-        ```
+        ``` css
             body{overflow-y: scroll;}
         ```
     > 总体而言，table 列宽自适应出现横向滚动条的几率一般是比较小的，主要原因是 table 的渲染有时会在浏览器纵向滚动条出现之前渲染完毕，这时 table 容器会被强制减少滚动条宽度的差（一般是 17px），导致 table 的横向滚动条出现。建议强制给你的页面显示出纵向滚动条。
@@ -38,7 +38,7 @@
 
 - **switch开关必须放在form表单中，否则渲染失败，看不出效果**，例如：
 
-    ```
+    ``` html
     <form class="layui-form" action="">
         <div class="layui-form-item">
             <label class="layui-form-label">开关</label>
@@ -51,7 +51,7 @@
 
 - **switch开关监听**
 
-    ```
+    ```  javascript
         form.on('switch(filter)', function(data){
             console.log(data.elem); //得到checkbox原始DOM对象
             console.log(data.elem.checked); //开关是否开启，true或者false
@@ -62,7 +62,7 @@
 
     > 其中，filter需要自行定义lay-filter的值，例如：
 
-    ```
+    ```  javascript
         <div class="layui-form-item">
             <label class="layui-form-label">主键</label>
             <div class="layui-input-block">
@@ -79,7 +79,7 @@
         - **凡是涉及到form表单里面的内容，通过js动态处理完必须进行`form.render`渲染**
         - **凡是涉及到form表单里面的内容，通过js动态处理完必须进行`form.render`渲染**
         - **凡是涉及到form表单里面的内容，通过js动态处理完必须进行`form.render`渲染**
-    ```
+    ```  javascript
         // 设置选中状态
         $("#isPrimaryKey").attr('checked','checked');
 
@@ -105,7 +105,7 @@
 
     所以，实际的if判断是：if("on"=="true")，这显然是不成立的。因此需要改动一下你的html，加一个 `value`属性，例如：
 
-    ```
+    ``` html
     <input type="checkbox" id="isPrimaryKey" name="isPrimaryKey" value="true" lay-skin="switch" lay-filter="isPrimaryKey" lay-text="是|否">
     ```
 
@@ -113,7 +113,7 @@
 
 - **select下拉框通过设置 selected=""可以设置当前选择项，例如:**
 
-    ```
+    ``` html
         <select>
             <option value="请选择表单类型..."></option>
             <option value="1" selected="">1</option>
@@ -132,11 +132,11 @@
     例如：
 
     JS：
-    ```
+    ```  javascript
         var selectArray = $("#selectContent").find("select");// 返回selectContent里面所有下拉框对象集合
     ```
     HTML：
-    ```
+    ``` html
         <div id="selectContent">
             <select id="id_ValiteType" name="valiteType">
                 <option value="no">不验证</option>
@@ -154,14 +154,14 @@
     - 语法：`form.on('submit(filter)', callback)`
 
         例如：
-        ```
+        ```  javascript
         form.on('submit(formDemo)', function (data){
 
         });
         ```
 
     - 阻止表单提交后跳转
-        ```
+        ```  javascript
         form.on('submit(formDemo)', function (data){
 
             return false;// 只需要返回false即可
@@ -174,7 +174,7 @@
 
     父窗体html（简写）:
 
-    ```
+    ``` html
     <div class="layui-tab" lay-filter="tabDemo">
         <ul class="layui-tab-title">
             <li class="layui-this">网站设置</li>
@@ -195,7 +195,7 @@
     </div>
     ```
     父窗体js逻辑（简写）：
-    ```
+    ```  javascript
     $("#openChildWindow").click(function () {
         layer.open({
             type: 2,// 定义为iFrame弹出层
@@ -215,7 +215,7 @@
     --------------
 
     子窗体html（简写）：
-    ```
+    ```  javascript
     $("#btnAdd").click(function () {
         debugger
         window.parent.layui.element.tabAdd('tabDemo',  {
@@ -227,7 +227,7 @@
     ```
     
     子窗体js逻辑（简写）：
-    ```
+    ``` html
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn" id="btnAdd">动态增加选项卡</button>
@@ -248,7 +248,7 @@
 # 弹窗相关
 - **机构弹出框选择的自定义行内操作按钮定义：**
 
-    ```
+    ``` html
         <script type="text/html" id="tableToolBar_tpl">
             <a class="layui-btn  layui-btn-xs" funName="{funName}" id="id_Choose" lay-event="InstitutionChoose">{btnName}</a>
         </script>
@@ -259,7 +259,7 @@
  >- sessionStorage 会话性存储：layui.sessionData(table, settings)，页面关闭后即失效。注：layui 2.2.5 新增
 
 上述两个方法的使用方式是完全一样的。其中参数 table 为表名，settings是一个对象，用于设置key、value。下面与 layui.data 方法为例：
-```
+```  javascript
 //【增】：向test表插入一个nickname字段，如果该表不存在，则自动建立。
 layui.data('test', {
   key: 'nickname'
@@ -281,7 +281,7 @@ console.log(localTest.nickname); //获得“贤心”
 ```
 
  **多值存储示例：**
- ```
+ ```  javascript
  layui.data('cate', {
   key: 'data'
   ,value: [{
@@ -300,7 +300,7 @@ console.log(cate.data)
 # 其它
 - **注意字符串类型的属性**
     例如：
-    ```
+    ```  javascript
     element.tabAdd('demo', {
         title: '选项卡的标题'
         ,content: '选项卡的内容' //支持传入html
@@ -311,7 +311,7 @@ console.log(cate.data)
       
     ```
     以上新增一个选项卡，新增完成要切换到选项卡，但是因为不小心用了数字作为id导致切换失败，代码如下：
-    ```
+    ```  javascript
     element.tabAdd('main-tab', {
         title: title,
         content: '<iframe id="' + 0 + '" src="' + url + '" class="layui-tab-iframe"></iframe>',
@@ -321,7 +321,7 @@ console.log(cate.data)
     element.tabChange('main-tab', 0);
     ```
     改成：
-    ```
+    ```  javascript
     element.tabAdd('main-tab', {
         title: title,
         content: '<iframe id="' + 0 + '" src="' + url + '" class="layui-tab-iframe"></iframe>',
