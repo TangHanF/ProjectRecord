@@ -34,6 +34,59 @@
         ```
     > 总体而言，table 列宽自适应出现横向滚动条的几率一般是比较小的，主要原因是 table 的渲染有时会在浏览器纵向滚动条出现之前渲染完毕，这时 table 容器会被强制减少滚动条宽度的差（一般是 17px），导致 table 的横向滚动条出现。建议强制给你的页面显示出纵向滚动条。
 
+- **数据表格指定行高亮显示**
+
+    目前好像layui可以设置列样式，没法直接指定行样式，但是可能又有些人有高亮显示某一行的需求但又无从下手。我的解决思路其实很简单，甚至是很基础：既然没有现成的相关属性（其实说实在，真不好设置属性，因为列可能是固定的，行可是动态的，不好定位），我们可以自己在数据表格渲染完成之后自己去根据相应条件设置行样式。
+
+    - 数据表格的done回调事件（渲染完成的回调函数）
+    - 利用jQuery设置相关行样式
+
+    **示例：**
+    ``` javascript
+        table.render({
+        id: "tableID"// 设定表格的唯一ID进行标识
+        , elem: '#tableDataLoad'// 绑定table对应的元素
+        , height: 'full-190'
+        , url: 'data.json' // 数据源
+        , size: 'sm'// 表格尺寸。sm （小尺寸）  lg （大尺寸）
+        ,cols: [[ //表头
+            {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+            ,{field: 'username', title: '用户名', width:80}
+            ,{field: 'sex', title: '性别', width:80, sort: true}
+            ,{field: 'city', title: '城市', width:80}
+            ,{field: 'sign', title: '签名', width: 177}
+            ,{field: 'experience', title: '积分', width: 80, sort: true}
+            ,{field: 'score', title: '评分', width: 80, sort: true}
+            ,{field: 'classify', title: '职业', width: 80}
+            ,{field: 'wealth', title: '财富', width: 135, sort: true}
+        ]]
+        , done: function (res, curr, count) {// 表格渲染完成之后的回调
+
+            $(".layui-table th").css("font-weight", "bold");// 设定表格标题字体加粗
+
+            $($(".layui-table-body.layui-table-main tr")[2]).css("background-color","yellow")
+            $($(".layui-table-body.layui-table-main tr")[3]).css("background-color","yellow")
+
+            // 有固定列（fixed）的同步处理
+
+            $($("div .layui-table-fixed.layui-table-fixed-l .layui-table-body tr")[2]).css("background-color","yellow")
+            $($("div .layui-table-fixed.layui-table-fixed-l .layui-table-body tr")[3]).css("background-color","yellow")
+
+            
+            $($(".layui-table-body.layui-table-main tr")[6]).css("background-color","yellow")
+            $($(".layui-table-body.layui-table-main tr")[7]).css("background-color","yellow")
+            
+            // 有固定列（fixed）的同步处理
+
+            $($("div .layui-table-fixed.layui-table-fixed-l .layui-table-body tr")[6]).css("background-color","yellow")
+            $($("div .layui-table-fixed.layui-table-fixed-l .layui-table-body tr")[7]).css("background-color","yellow")
+        }
+        });//end table.render
+    ```
+效果图：
+
+![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/行高亮效果.png)
+
 # switch开关相关
 
 - **switch开关必须放在form表单中，否则渲染失败，看不出效果**，例如：
@@ -297,6 +350,20 @@ console.log(localTest.nickname); //获得“贤心”
 var cate = layui.data('cate');
 console.log(cate.data)
  ```
+
+# Upload文件上传
+## 注意点：
+ 1. 文件上传到服务端之后服务端根据处理情况返回一个响应结果，这个响应结果 **必须为合法的JSON字符串** ，例如：
+``` JSON
+{
+  "code": 0
+  ,"msg": ""
+  ,"data": {
+    "src": "http://cdn.layui.com/123.jpg"
+  }
+} 
+```
+
 # 其它
 - **注意字符串类型的属性**
     例如：
