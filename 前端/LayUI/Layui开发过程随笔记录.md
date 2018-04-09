@@ -157,6 +157,11 @@
 效果图：
 
 ![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/行高亮效果.png)
+
+
+
+
+--------------
 # switch开关相关
 
 - **switch开关必须放在form表单中，否则渲染失败，看不出效果**，例如：
@@ -232,6 +237,8 @@
     <input type="checkbox" id="isPrimaryKey" name="isPrimaryKey" value="true" lay-skin="switch" lay-filter="isPrimaryKey" lay-text="是|否">
     ```
 
+
+-------------
 # 下拉框相关
 
 - **select下拉框通过设置 selected=""可以设置当前选择项，例如:**
@@ -290,7 +297,7 @@
             return false;// 只需要返回false即可
         });
         ```
-
+------------------
 # Tab相关
 - **在子窗体动态为父窗体增加tab选项卡**
     > 简单的例子，父窗体已经创建好了选项卡，我们暂且使用官方提供的模板吧，然后再第一个选项卡加一个按钮，这个按钮就是触发弹窗的，然后弹窗加载一个html页面，这个页面里面再定一个按钮，叫做“动态增加选项卡”，然后点击这个按钮时父窗体的tab选项卡动态新增。
@@ -366,7 +373,7 @@
     > 因内容较多，详细内容请移步：[点击此处查看](https://github.com/TangHanF/ProjectRecord/blob/master/%E5%89%8D%E7%AB%AF/LayUI/%E4%B8%BALayui%E7%9A%84Tab%E9%80%89%E9%A1%B9%E5%8D%A1%E5%A2%9E%E5%8A%A0%E5%85%B3%E9%97%AD%E5%BD%93%E5%89%8D%E3%80%81%E5%85%B3%E9%97%AD%E5%85%B6%E5%AE%83%E6%93%8D%E4%BD%9C.md)
 
 
-
+------
 
 # 弹窗相关
 - **机构弹出框选择的自定义行内操作按钮定义：**
@@ -376,6 +383,9 @@
             <a class="layui-btn  layui-btn-xs" funName="{funName}" id="id_Choose" lay-event="InstitutionChoose">{btnName}</a>
         </script>
     ```
+
+
+-------
  # Layui数据存储
  **官方说明：**
  > - localStorage 持久化存储：layui.data(table, settings)，数据会永久存在，除非物理删除。
@@ -421,6 +431,8 @@ var cate = layui.data('cate');
 console.log(cate.data)
  ```
 
+------
+
 # Upload文件上传
 ## 注意点：
  1. 文件上传到服务端之后服务端根据处理情况返回一个响应结果，这个响应结果 **必须为合法的JSON字符串** ，例如：
@@ -433,6 +445,99 @@ console.log(cate.data)
   }
 } 
 ```
+## 多按钮上传判断是哪个按钮触发的文件选择上传操作
+
+> 此问题由Fly社区的《intuition》网友提出，原帖地址：[点此直达](http://fly.layui.com/jie/24937/#item-1523254855403)
+
+效果图：
+
+![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/文件选择上传.gif)
+
+
+该网友的问题描述为：
+> 界面中需要两个选择文件的按钮，共同触发上传按钮，但是在choose中希望能够区分到底 是哪个选择文件按钮选择的文件，this.item在choose回调函数中似乎无法使用
+
+同时给出的代码如下：
+
+``` html
+<div class="layui-form-item">
+    <label for="L_repass" class="layui-form-label">附件</label>
+    <div class="layui-input-block">
+        <button class="layui-btn demoMore" id="test8" type="button">选择文件</button>
+<span class="x-red" id="sFile1"></span>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label for="L_repass" class="layui-form-label">预览附件</label>
+    <div class="layui-input-block">
+        <button class="layui-btn demoMore" id="test10" type="button">选择文件</button>
+<span class="x-red" id="sFile2"></span>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label for="L_repass" class="layui-form-label"></label>
+    <button class="layui-btn" id="test9" type="button">开始上传</button>
+</div>
+```
+
+``` javascript
+layui.use('upload', function () {
+    var $ = layui.jquery,
+        upload = layui.upload;
+    upload.render({
+        elem: '.demoMore',
+        url: 'FileUpload.ashx',
+        auto: false,
+        data: {
+            desc: function () {
+                return $("#desc").val();
+            }
+        },
+        before: function () {
+            alert($(this.item[0]).attr('id'));
+        },
+        choose: function (obj) {
+            var files = obj.pushFile(); //将每次选择的文件追加到文件队列 
+            alert(obj.length);
+            obj.preview(function (index, file, result) {
+                $("#sFile1").html(file.name);
+            });
+        }, multiple: true, number: 2, accept: 'file', bindAction: '#test9', done:
+            function (res) {
+                console.log(res)
+            }
+    });
+});
+
+```
+
+
+其实主要问题在于choose回调的处理中，我将choose回调的代码调整如下：
+
+``` javascript
+, choose: function (obj) {
+    var that = this;// 重新指定对象，防止下面调用时出现对象不一致问题
+
+    var files = obj.pushFile(); //将每次选择的文件追加到文件队列
+    obj.preview(function (index, file, result) {
+
+        /* that.item可以获取到当前点击按钮对象
+        *  正常思路的话按照DOM结构分析，当前按钮元素后面的元素应该是显示文件名的<span>标签，然后我们为当前按钮后面的span标签设置文本内容即可。
+        *  但是实际上我们利用jquery的next方法获取到的是一个隐藏的input，因此直接next是定位不到想要的span标签的；
+        *  于是决定用nextAll方法看看后面到底都啥，于是利用$(that.item).nextAll()获取到后面同类所有元素集合，发现span在集合索引值为1的位置，
+        *  最后代码就是：
+        * */
+        $($(that.item).nextAll()[1]).html(file.name);// 利用jquery定位元素的方式可以再优化，请自行优化。此处仅仅是实现功能，尚未优化
+    });
+}
+```
+
+
+![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/that1.png)
+
+
+![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/that_nextAll.png)
+-----
 
 # 其它
 - **注意字符串类型的属性**
