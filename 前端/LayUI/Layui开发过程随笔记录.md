@@ -159,7 +159,79 @@
 ![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/行高亮效果.png)
 
 
+------
 
+**最终代码参考：**
+``` javascript
+layui.use(['table'], function () {
+    var table = layui.table;
+    table.render({
+        id: "tableID"// 设定表格的唯一ID进行标识
+        , elem: '#tableDataLoad'// 绑定table对应的元素
+        , height: 'full-300'
+        , url: 'data.json' // 数据源
+        , size: 'sm'// 表格尺寸。sm （小尺寸）  lg （大尺寸）
+        , page: true
+        , limits: [10, 20, 30, 40, 50]
+        , limit: 30
+        , cols: [[ //表头
+            {field: 'numbers', title: '序号', type: 'numbers'}
+            , {field: 'id', title: 'ID', width: 80, sort: true}
+            , {field: 'username', title: '用户名', width: 80}
+            , {field: 'sex', title: '性别', width: 80, sort: true}
+            , {field: 'city', title: '城市', width: 80}
+            , {field: 'sign', title: '签名', width: 177}
+            , {field: 'experience', title: '积分', width: 80, sort: true}
+            , {field: 'score', title: '评分', width: 80, sort: true}
+            , {field: 'classify', title: '职业', width: 80}
+            , {field: 'wealth', title: '财富', width: 135, sort: true}
+        ]]
+        , done: function (res, curr, count) {// 表格渲染完成之后的回调
+            $(".layui-table th").css("font-weight", "bold");// 设定表格标题字体加粗
+            //dealLighthigh([2, 3, 6, 7])
+            var list = [];
+            for (var i = 0; i < this.limit; i++) {
+                if (i > 0 && i % 2 == 0) {
+                    var rowDesObj = {};
+                    rowDesObj["bgColor"] = '#53eb23';
+                    rowDesObj["rowIndex"] = i;
+                    list.push(rowDesObj);
+
+                    rowDesObj = {};
+                    rowDesObj["bgColor"] = '#53eb23';
+                    rowDesObj["rowIndex"] = i + 1;
+                    list.push(rowDesObj);
+                    i += 2;
+                }
+            }
+            dealLighthigh(list);
+            //dealLighthigh([
+            //        {rowIndex: 2, bgColor: '#53eb23'}, {rowIndex: 3, bgColor: '#53eb23'}
+            //        , {rowIndex: 6, bgColor: '#53eb23'}, {rowIndex: 7, bgColor: '#53eb23'}
+            //        , {rowIndex: 10, bgColor: '#53eb23'}, {rowIndex: 11, bgColor: '#53eb23'}
+            //    ]
+            //)
+
+
+        }
+    });//end table.render
+});
+
+
+function dealLighthigh (rowIndexArr, bgColor) {
+    $.each(rowIndexArr, function (index, val) {
+        if (typeof val == "number") {
+            $($(".layui-table-body.layui-table-main tr")[val]).css("background-color", bgColor ? bgColor : "yellow");
+            $($("div .layui-table-fixed.layui-table-fixed-l .layui-table-body tr")[val]).css("background-color", bgColor ? bgColor : "yellow");
+        } else if (typeof val == 'object') {
+            $($(".layui-table-body.layui-table-main tr")[val.rowIndex]).css("background-color", val.bgColor ? val.bgColor : "yellow");
+            $($("div .layui-table-fixed.layui-table-fixed-l .layui-table-body tr")[val.rowIndex]).css("background-color", val.bgColor ? val.bgColor : "yellow");
+        }
+    })
+}
+```
+最终效果图：
+![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/行高亮效果_最终.png)
 
 --------------
 # switch开关相关
