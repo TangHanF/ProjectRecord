@@ -83,10 +83,80 @@
         }
         });//end table.render
     ```
+
+    ### 对以上样式处理进行封装：
+    ``` JavaScript
+    function dealLighthigh (rowIndexArr, bgColor) {
+        $.each(rowIndexArr, function (index, val) {
+            if (typeof val == "number") {
+                $($(".layui-table-body.layui-table-main tr")[val]).css("background-color", bgColor ? bgColor : "yellow");
+                $($("div .layui-table-fixed.layui-table-fixed-l .layui-table-body tr")[val]).css("background-color", bgColor ? bgColor : "yellow");
+            } else if (typeof val == 'object') {
+                $($(".layui-table-body.layui-table-main tr")[val.rowIndex]).css("background-color", val.bgColor ? val.bgColor : "yellow");
+                $($("div .layui-table-fixed.layui-table-fixed-l .layui-table-body tr")[val.rowIndex]).css("background-color", val.bgColor ? val.bgColor : "yellow");
+            }
+        })
+    }
+    ```
+
+
+    调用示例：
+    ``` JavaScript
+        dealLighthigh([2, 3, 6, 7]);//指定要高亮显示的列，并且黄色高亮
+        dealLighthigh([2, 3, 6, 7],"red");//指定要高亮显示的列，并且红色高亮
+
+        // 或者
+
+        // 这种方式更加灵活，可以指定不同行的高亮颜色
+        dealLighthigh([
+                {rowIndex: 2, bgColor: 'red'}, {rowIndex: 3, bgColor: 'red'},
+                {rowIndex: 6, bgColor: 'yellow'}, {rowIndex: 7, bgColor: 'yellow'}
+            ]
+        );
+    ```
+
+    这的话对以上代码整理，实际应用为：
+    ``` javascript
+        table.render({
+        id: "tableID"// 设定表格的唯一ID进行标识
+        , elem: '#tableDataLoad'// 绑定table对应的元素
+        , height: 'full-190'
+        , url: 'data.json' // 数据源
+        , size: 'sm'// 表格尺寸。sm （小尺寸）  lg （大尺寸）
+        ,cols: [[ //表头
+            {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+            ,{field: 'username', title: '用户名', width:80}
+            ,{field: 'sex', title: '性别', width:80, sort: true}
+            ,{field: 'city', title: '城市', width:80}
+            ,{field: 'sign', title: '签名', width: 177}
+            ,{field: 'experience', title: '积分', width: 80, sort: true}
+            ,{field: 'score', title: '评分', width: 80, sort: true}
+            ,{field: 'classify', title: '职业', width: 80}
+            ,{field: 'wealth', title: '财富', width: 135, sort: true}
+        ]]
+        , done: function (res, curr, count) {// 表格渲染完成之后的回调
+
+            $(".layui-table th").css("font-weight", "bold");// 设定表格标题字体加粗
+
+                dealLighthigh([2, 3, 6, 7]);//指定要高亮显示的列，并且黄色高亮
+                dealLighthigh([2, 3, 6, 7],"red");//指定要高亮显示的列，并且红色高亮
+
+                // 或者
+
+                // 这种方式更加灵活，可以指定不同行的高亮颜色
+                dealLighthigh([
+                    {rowIndex: 2, bgColor: 'red'}, {rowIndex: 3, bgColor: 'red'},
+                    {rowIndex: 6, bgColor: 'yellow'}, {rowIndex: 7, bgColor: 'yellow'}
+                    ]
+                );
+        }
+        });//end table.render
+    ``` 
+
+
 效果图：
 
 ![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/行高亮效果.png)
-
 # switch开关相关
 
 - **switch开关必须放在form表单中，否则渲染失败，看不出效果**，例如：
