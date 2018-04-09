@@ -84,7 +84,7 @@
         });//end table.render
     ```
 
-    ### 对以上样式处理进行封装：
+    #### 对以上样式处理进行封装：
     ``` JavaScript
     function dealLighthigh (rowIndexArr, bgColor) {
         $.each(rowIndexArr, function (index, val) {
@@ -102,13 +102,13 @@
 
     调用示例：
     ``` JavaScript
-        dealLighthigh([2, 3, 6, 7]);//指定要高亮显示的列，并且黄色高亮
-        dealLighthigh([2, 3, 6, 7],"red");//指定要高亮显示的列，并且红色高亮
+        dealHighLight([2, 3, 6, 7]);//指定要高亮显示的列，并且黄色高亮
+        dealHighLight([2, 3, 6, 7],"red");//指定要高亮显示的列，并且红色高亮
 
         // 或者
 
         // 这种方式更加灵活，可以指定不同行的高亮颜色
-        dealLighthigh([
+        dealHighLight([
                 {rowIndex: 2, bgColor: 'red'}, {rowIndex: 3, bgColor: 'red'},
                 {rowIndex: 6, bgColor: 'yellow'}, {rowIndex: 7, bgColor: 'yellow'}
             ]
@@ -138,13 +138,13 @@
 
             $(".layui-table th").css("font-weight", "bold");// 设定表格标题字体加粗
 
-                dealLighthigh([2, 3, 6, 7]);//指定要高亮显示的列，并且黄色高亮
-                dealLighthigh([2, 3, 6, 7],"red");//指定要高亮显示的列，并且红色高亮
+                dealHighLight([2, 3, 6, 7]);//指定要高亮显示的列，并且黄色高亮
+                dealHighLight([2, 3, 6, 7],"red");//指定要高亮显示的列，并且红色高亮
 
                 // 或者
 
                 // 这种方式更加灵活，可以指定不同行的高亮颜色
-                dealLighthigh([
+                dealHighLight([
                     {rowIndex: 2, bgColor: 'red'}, {rowIndex: 3, bgColor: 'red'},
                     {rowIndex: 6, bgColor: 'yellow'}, {rowIndex: 7, bgColor: 'yellow'}
                     ]
