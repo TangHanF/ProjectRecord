@@ -28,4 +28,212 @@ var data = checkStatus.data;
 
 # 相关实现
 
-- 表格数据
+- **表格数据**
+[点击此处直达](https://github.com/TangHanF/ProjectRecord/blob/master/%E5%89%8D%E7%AB%AF/LayUI/data/data.json) 然后下载或者复制其内容自行新建文件即可。
+
+- **JS实现**
+
+新建JavaScript文件，例如新建一个《DataTableExtend.js》的文件，代码如下：
+``` javascript
+var LayUIDataTable = (function () {
+    var rowData = {};
+    var $;
+
+    function checkJquery () {
+        if (!$) {
+            console.log("未获取jquery对象，请检查是否在调用ConvertDataTable方法之前调用SetJqueryObj进行设置！")
+            return false;
+        } else return true;
+    }
+
+    /**
+     * 转换数据表格。
+     * @param callback 双击行的回调函数，该回调函数返回三个参数，分别为：当前点击行的索引值、当前点击单元格的值、当前行数据
+     * @returns {Array} 返回当前数据表当前页的所有行数据。数据结构：<br/>
+     * [
+     *      {字段名称1:{value:"当前字段值",cell:"当前字段所在单元格td对象",row:"当前字段所在行tr对象"}}
+     *     ,{字段名称2:{value:"",cell:"",row:""}}
+     * ]
+     * @constructor
+     */
+    function ConvertDataTable (callback) {
+        if (!checkJquery()) return;
+        var dataList = [];
+        var rowData = {};
+        var trArr = $(".layui-table-body.layui-table-main tr");// 行数据
+        if (!trArr || trArr.length == 0) {
+            console.log("未获取到相关行数据，请检查数据表格是否渲染完毕！");
+            return;
+        }
+        $.each(trArr, function (index, trObj) {
+            var currentClickRowIndex;
+            var currentClickCellValue;
+
+            $(trObj).dblclick(function (e) {
+                var returnData = {};
+                var currentClickRow = $(e.currentTarget);
+                currentClickRowIndex = currentClickRow.data("index");
+                currentClickCellValue = e.target.innerHTML
+                $.each(dataList[currentClickRowIndex], function (key, obj) {
+                    returnData[key] = obj.value;
+                });
+                callback(currentClickRowIndex, currentClickCellValue, returnData);
+            });
+            var tdArrObj = $(trObj).find('td');
+            rowData = {};
+            //  每行的单元格数据
+            $.each(tdArrObj, function (index_1, tdObj) {
+                var td_field = $(tdObj).data("field");
+                rowData[td_field] = {};
+                rowData[td_field]["value"] = $($(tdObj).html()).html();
+                rowData[td_field]["cell"] = $(tdObj);
+                rowData[td_field]["row"] = $(trObj);
+
+            })
+            dataList.push(rowData);
+        })
+        return dataList;
+    }
+
+    return {
+        /**
+         * 设置JQuery对象，第一步操作。如果你没有在head标签里面引入jquery且未执行该方法的话，ParseDataTable方法、HideField方法会无法执行，出现找不到 $ 的错误。如果你是使用LayUI内置的Jquery，可以
+         * var $ = layui.jquery   然后把 $ 传入该方法
+         * @param jqueryObj
+         * @constructor
+         */
+        SetJqueryObj: function (jqueryObj) {
+            $ = jqueryObj;
+        }
+
+        /**
+         * 转换数据表格
+         */
+        , ParseDataTable: ConvertDataTable
+
+        /**
+         * 隐藏字段
+         * @param fieldName 要隐藏的字段名（field名称）参数可为字符串（隐藏单列）或者数组（隐藏多列）
+         * @constructor
+         */
+        , HideField: function (fieldName) {
+            if (!checkJquery()) return;
+            if (fieldName instanceof Array) {
+                $.each(fieldName, function (index, field) {
+                    $("[data-field='" + field + "']").css('display', 'none');
+                })
+            } else if (typeof fieldName === 'string') {
+                $("[data-field='" + fieldName + "']").css('display', 'none');
+            } else {
+
+            }
+        }
+    }
+})();
+```
+
+- **调用**
+
+完整示例：
+
+``` html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<script src="../../js/jquery-3.3.1.js"></script>-->
+    <script src="../../js/layui.js"></script>
+    <script src="DataTableExtend.js"></script>
+    <link rel="stylesheet" href="../../js/css/layui.css" media="all">
+
+    <script>
+        (function () {
+            layui.use(['table', 'layer'], function () {
+                var table = layui.table;
+                var layer = layui.layer;
+                var $ = layui.jquery;
+                table.render({
+                    id: "tableID"// 设定表格的唯一ID进行标识
+                    , elem: '#tableDataLoad'// 绑定table对应的元素
+                    , height: 'full-300'
+                    , url: 'data2.json' // TODO: 此处写你实际数据来源
+                    , size: 'sm'
+                    , page: true
+                    , limits: [10, 20, 30, 40, 50]
+                    , limit: 30
+                    , cols: [[
+                        {field: 'match_name', width: 93, align: 'center', title: '比赛名称', rowspan: 2}
+                        , {align: 'center', title: '比赛信息', colspan: 3}
+                        , {field: 'jingcai', width: 200, align: 'center', title: '竞猜项', rowspan: 2}
+                        , {field: 'num', width: 100, align: 'center', title: '竞猜数量', rowspan: 2}
+                    ]
+                        , [
+                            {field: 'match_time_beijing', width: 200, align: 'center', title: '比赛时间'}
+                            , {field: 'match_master', width: 100, align: 'center', title: '主队'}
+                            , {field: 'match_guest', width: 100, align: 'center', title: '客队'}
+                        ]]
+                    , done: function (res, curr, count) {// 表格渲染完成之后的回调
+
+                        $(".layui-table th").css("font-weight", "bold");// 设定表格标题字体加粗
+
+                        LayUIDataTable.SetJqueryObj($);// 第一步：设置jQuery对象
+
+                        //LayUIDataTable.HideField('num');// 隐藏列-单列模式
+                        //LayUIDataTable.HideField(['num','match_guest']);// 隐藏列-多列模式
+
+                        var currentRowDataList = LayUIDataTable.ParseDataTable(function (index, currentData, rowData) {
+                            console.log("当前页数据条数:" + currentRowDataList.length)
+                            console.log("当前行索引：" + index);
+                            console.log("触发的当前行单元格：" + currentData);
+                            console.log("当前行数据：" + JSON.stringify(rowData));
+
+                            var msg = '<div style="text-align: left"> 【当前页数据条数】' + currentRowDataList.length + '<br/>【当前行索引】' + index + '<br/>【触发的当前行单元格】' + currentData + '<br/>【当前行数据】' + JSON.stringify(rowData) + '</div>';
+                            layer.msg(msg)
+                        })
+
+                        // 对相关数据进行判断处理--此处对【竞猜数量】大于30的进行高亮显示
+                        $.each(currentRowDataList, function (index, obj) {
+                            if (obj['num'] && obj['num'].value > 30) {
+                                obj['num'].row.css("background-color", "#FAB000");
+                            }
+                        })
+                    }// end done
+
+
+                });//end table.render
+
+                function dealLighthigh (rowIndexArr, bgColor) {
+                    $.each(rowIndexArr, function (index, val) {
+                        if (typeof val == "number") {
+                            $($(".layui-table-body.layui-table-main tr")[val]).css("background-color", bgColor ? bgColor : "yellow");
+                            $($("div .layui-table-fixed.layui-table-fixed-l .layui-table-body tr")[val]).css("background-color", bgColor ? bgColor : "yellow");
+                        } else if (typeof val == 'object') {
+                            $($(".layui-table-body.layui-table-main tr")[val.rowIndex]).css("background-color", val.bgColor ? val.bgColor : "yellow");
+                            $($("div .layui-table-fixed.layui-table-fixed-l .layui-table-body tr")[val.rowIndex]).css("background-color", val.bgColor ? val.bgColor : "yellow");
+                        }
+                    })
+                }
+
+
+            });// end layui use
+        })()
+    </script>
+</head>
+<body>
+<table id="tableDataLoad" lay-filter="demo"></table>
+
+</body>
+</html>
+```
+
+# 效果图展示
+
+## 图一：获取行数据
+![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/获取行数据.gif)
+
+## 图二：对符合条件的行进行高亮显示
+![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/对符合条件的行进行高亮显示.gif)
+
+## 图三：隐藏列
+![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/隐藏列.gif)
