@@ -12,7 +12,7 @@ var checkStatus = table.checkStatus('表格唯一ID值');
 var data = checkStatus.data;
 ```
 
-    获取到相关行数据，其中 `data` 就是当前选中行的数据对象集合。具体参考： [点击此处直达](http://www.layui.com/demo/table/operate.html)
+获取到相关行数据，其中 `data` 就是当前选中行的数据对象集合。具体参考： [点击此处直达](http://www.layui.com/demo/table/operate.html)
 
 ----
 但是，如果说没有checkbox，没有行内工具条等设置，就一个常规表格，例如：
