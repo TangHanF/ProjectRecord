@@ -21,10 +21,27 @@ var data = checkStatus.data;
 
 # 目标
 
-- **要做到双击某一个单元格触发获取整行数据操作**
+- **要做到双击某一个单元格触发获取整行数据操作**，可以拿到当前行tr的DOM对象以及单元格td的DOM对象，以便利用Jquery进行操作，例如高亮显示单元格/行，更改字体颜色等等
 - 能够根据相关条件进行数据筛选、进行高亮显示
-- 能够获取某一个单元格数据
-- 能够动态隐藏指定列（实际作用可能不大，因为隐藏数据的话直接在定义`cols`时不定义即可，LayUI的table数据对象还是会指向你服务端返回的数据，即：你服务端返回哪些字段，table数据容器会原封保留，只是你不在`cols`定义的话不进行展示，但是数据还是有的），但是有时候可能也需要动态隐藏吧，所以保留了该功能
+- 能够获取某一个单元格数据，以及该单元格的DOM对象，以便利用Jquery进行操作，例如高亮显示单元格，更改字体颜色等等
+- 能够动态隐藏指定列（实际作用可能不大，因为隐藏数据的话直接在定义`cols`时不定义即可，LayUI的table数据对象还是会指向你服务端返回的数据，即：**你服务端返回哪些字段，table数据容器会原封保留**，只是你不在`cols`定义的话不进行展示，但是数据还是有的），但是有时候可能也需要动态隐藏吧，所以保留了该功能
+
+# 重点
+
+> 相关逻辑写在table.render()方法的`done`回调中，例如：
+
+```javascript
+table.render({
+    ....
+    ,//详细的配置此处就不描述了
+    ,....
+    ,done:function(res, curr, count){
+        // 此处写逻辑即可
+    }
+});
+```
+
+
 
 # 相关实现
 
@@ -33,7 +50,7 @@ var data = checkStatus.data;
 
 - **JS实现**
 
-新建JavaScript文件，例如新建一个《DataTableExtend.js》的文件，代码如下：
+新建JavaScript文件，例如新建一个`DataTableExtend.js`的文件，代码如下：
 ``` javascript
 var LayUIDataTable = (function () {
     var rowData = {};
@@ -194,8 +211,12 @@ var LayUIDataTable = (function () {
 
                         // 对相关数据进行判断处理--此处对【竞猜数量】大于30的进行高亮显示
                         $.each(currentRowDataList, function (index, obj) {
+                             /*
+                                * 通过遍历表格集合，拿到每行数据对象obj，通过obj["列名"]["row"]可以拿到行对象，obj["列名"]["cell"]可以拿到单元格对象
+                                * */
                             if (obj['num'] && obj['num'].value > 30) {
-                                obj['num'].row.css("background-color", "#FAB000");
+                                obj['num']["row"].css("background-color", "#FAB000");// 对行（row）进行高亮显示
+                                obj["num"]["cell"].css("font-weight","bold");// 对单元格（cell）字体进行加粗显示
                             }
                         })
                     }// end done

@@ -3,10 +3,11 @@
 - 首先管理端模板的话还是使用官方提供的，参考链接：[点此打开后台布局页面](http://www.layui.com/demo/layuiAdmin.html)
 
 - 以下我只列举出关键代码，各位根据实际情况拷贝到自己项目适当位置
+
 - 相比上一篇教程([点击此处查阅](https://github.com/TangHanF/ProjectRecord/blob/master/%E5%89%8D%E7%AB%AF/LayUI/%E4%B8%BALayui%E7%9A%84Tab%E9%80%89%E9%A1%B9%E5%8D%A1%E5%A2%9E%E5%8A%A0%E5%85%B3%E9%97%AD%E5%BD%93%E5%89%8D%E3%80%81%E5%85%B3%E9%97%AD%E5%85%B6%E5%AE%83%E6%93%8D%E4%BD%9C.md))来说，此次除了：
     - 关闭当前
     - 关闭所有
-    
+
     之外，又新增了：
     - 关闭非当前
     - 关闭左侧所有
@@ -33,7 +34,6 @@
     </ul>
 ```
     相关CSS样式请看下面《CSS样式》部分
-
 
 -------
 
