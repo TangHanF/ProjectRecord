@@ -258,3 +258,23 @@ var LayUIDataTable = (function () {
 
 ## 图三：隐藏列
 ![](https://github.com/TangHanF/ProjectRecord/raw/master/前端/LayUI/img/隐藏列.gif)
+
+**特别说明**
+
+> 通过 `LayUIDataTable.HideField`隐藏列之后如果进行排序出现被隐藏的列再次出现的问题，解决方案如下：
+
+**监听排序事件，进行隐藏处理**
+
+```javascript
+table.on('sort(demo)', function(obj){
+    // 此处写你要隐藏的field
+    $("[data-field='num']").css('display', 'none');
+    //....
+    
+    
+    //.....
+    // 其它逻辑自行处理
+    //.....
+});
+```
+

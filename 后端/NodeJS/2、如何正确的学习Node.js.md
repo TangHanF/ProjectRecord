@@ -36,7 +36,9 @@ Part 5答疑：回答大家的问题
 
 ## Part 0 ：Node.js简介
 
-a）Node.js简介 b）什么是Node.js？ c）基本原理
+- a）Node.js简介 
+- b）什么是Node.js？ 
+- c）基本原理
 
 ### a）Node.js简介
 
