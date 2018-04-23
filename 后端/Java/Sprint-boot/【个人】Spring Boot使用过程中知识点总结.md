@@ -1,4 +1,4 @@
-#目录
+# 目录
 
 
 
@@ -6,7 +6,7 @@
 
 
 
-#Entity实体注意点
+# Entity实体注意点
 
 entity实体的@Column注解问题：建议下划线分割。
 
@@ -1126,9 +1126,121 @@ htmlhead 是指定义的代码片段 如 th:fragment=”copy”
 
 
 
+# 全局异常捕获处理
+
+需要用到的相关注解：
+
+- `@ControllerAdvice`，该注解是spring2.3以后新增的一个注解，主要是用来Controller的一些公共的需求的低侵入性增强提供辅助，作用于@RequestMapping标注的方法上。
+- `@ExceptionHandler`，该注解是配合@ExceptionHandler一起使用的注解，自定义错误处理器，可自己组装json字符串，并返回到页面。
+- `@ResponseBody`，返回JSON格式数据。
+
+```java
+@ControllerAdvice
+public class ExceptionController {
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseBody
+    public Map<String,Object> dealError(HttpServletRequest request, Exception exception){
+        Map<String,Object> result=new HashMap<>();
+        //System.out.println("我报错了："+exception.getLocalizedMessage());
+        //System.out.println("我报错了："+exception.getCause());
+        //System.out.println("我报错了："+exception.getSuppressed());
+        //System.out.println("我报错了："+exception.getMessage());
+        //System.out.println("我报错了："+exception.getStackTrace());
+        result.put("ErrorCode","500");
+        result.put("ErrorMsg","服务器异常，信息："+exception.getLocalizedMessage());
+
+        return result;
+    }
+}
+```
+
+
+
+# Spring Boot项目打成jar包后关于配置文件的外部化配置
+
+> 在未进行任何处理的情况下，Spring Boot会默认使用项目中的 `application.properties` 或者 `application.yml` 来读取项目所需配置。
+
+## 访问命令行属性
+
+　　在默认的情况下， `SpringApplication` 会将任何命令行选项参数（以 `--` 开头，例如： `--server.port=9000`）转换为 `property` 并添加到Spring环境当中。 
+　　例如，启动项目的时候指定端口：
+
+```bash
+java -jar SNAPSHOT.jar --server.port=8081
+```
+
+　　Spring Boot使用了一个非常特殊的 `PropertySource` 命令，目的是为了让属性值的重写按照一定的顺序来，而在这个顺序当中，命令行属性总是优先于其他属性源。 
+　　当然，如果不想将命令行属性添加到Spring环境当中，可以使用以下代码来禁用它们。
+
+```java
+SpringApplication.setAddCommandLineProperties(false);
+```
+
+## 应用程序属性文件
+
+　　`SpringApplication` 将从 `application.properties` 以下位置的文件中加载属性并且将其添加到Spring的环境当中：
+
+- 当前目录下的 `/config` 子目录
+
+- 当前目录
+
+- classpath中的 `/config` 目录
+
+- classpath根目录
+
+  　　该列表按照优先级的顺序排列（在列表中较高的位置定义的属性将会覆盖在较低位置定义的属性）。
+
+  　　如果您不喜欢 `application.properties` 作为配置文件名，则可以通过指定 `spring.config.name` 环境属性来切换到另一个名称。还可以使用 `spring.config.location` 环境属性（以逗号分隔的目录位置列表或文件路径）引用显式位置。 
+  　　比如：
+
+```bash
+java -jar myproject.jar --spring.config.name = myproject1
+```
+
+```bash
+java -jar myproject.jar --spring.config.location = classpath：/default.properties,classpath：/override.properties1
+java -jar -Dspring.config.location=D:\speech\default.properties analysis-speech-tool-0.0.1-SNAPSHOT.jar1
+```
 
 
 
 
 
+# 问题解决
+
+## Ajax发送JSON请求出错
+
+> {"timestamp":"2018-04-19T12:41:07.106+0000","status":415,"error":"Unsupported Media Type","message":"Content type 'application/x-www-form-urlencoded;charset=UTF-8' not supported","path":"/servlet/CommonHttpHandler"}
+
+Ajax进行POST请求时，默认的Content-type:` 'application/x-www-form-urlencoded;charset=UTF-8' `
+
+**解决方案：**
+
+在“$.ajax({ ”之前，需要加上：`contentType : 'application/json'    `
+
+```javascript
+
+    $.ajax({
+        contentType : 'application/json',
+        url: xxxxxxxx,
+        type: "post",
+        async: true,
+        data: JSON.stringify({"ClassName": className, "MethodName": methodName,"JsonText": paramJsonArr}),
+
+        complete: function (data, textStatus, jqXHR) {
+          
+        }
+    });//end $.ajax
+};//end Ajax
+```
+
+Ajax数据格式问题
+
+> Caused by: com.fasterxml.jackson.core.JsonParseException: Unrecognized token '——属性名————': was expecting ('true', 'false' or 'null')
+
+**解决方案：**
+
+> 使用JSON.stringify()方法对Ajax的`data`进行处理，例如：
+>
+> **data: JSON.stringify({"ClassName": className, "MethodName": methodName,"JsonText": paramJsonArr})**
 
