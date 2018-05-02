@@ -107,7 +107,7 @@ defaults write com.apple.dock springboard-columns Default
 killall Dock
 ```
 
-![效果图](https://upload-images.jianshu.io/upload_images/1746028-bf8ab44b9aeb023a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700)
+![](https://ws4.sinaimg.cn/large/006tNc79ly1fqxedjuce9j30jg0c675w.jpg)
 
 
 
