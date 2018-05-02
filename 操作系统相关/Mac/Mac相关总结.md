@@ -117,7 +117,7 @@ killall Dock
 
  中间会按RETURN键，输入密码
 
-![img](https://images2015.cnblogs.com/blog/730269/201608/730269-20160809164325277-1161249829.png)
+![](https://ws3.sinaimg.cn/large/006tNc79ly1fqxe8tugyjj31bm13uqia.jpg)
 
 ## 2.卸载
 
