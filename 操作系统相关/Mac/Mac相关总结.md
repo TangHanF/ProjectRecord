@@ -4,8 +4,8 @@ https://blog.csdn.net/qq_34621169/article/details/79365247
 
 # Mac剪切操作
 
-- Command+C 复制选择项
-- option+Command+V 
+1. `⌘+C` 复制选择项
+2. `⌥+⌘+V` 然后粘贴 
 
 # Finder标题栏显示路径
 
@@ -17,11 +17,7 @@ https://blog.csdn.net/qq_34621169/article/details/79365247
 
 > defaults delete com.apple.finder _FXShowPosixPathInTitle;killall Finder
 
-参考地址：
-
-https://jingyan.baidu.com/article/380abd0a12007b1d91192c5e.html
-
-
+以上命令执行完毕需要在执行 `killall Finder`
 
 # quickplay自动播放
 
@@ -35,19 +31,19 @@ http://www.mac52ipod.cn/post/Perian-QuickTime-AVI-Flv-MkV.php
 
 # **Mac**常用快捷键符号
 
-⌘（command）
+`⌘`（command）
 
-⌥（option）
+`⌥`（option）
 
-⇧（shift）
+`⇧`（shift）
 
-⇪（caps lock）
+`⇪`（caps lock）
 
-⌃（control）
+`⌃`（control）
 
-↩（return）
+`↩`（return）
 
-⌅（enter）
+`⌅`（enter）
 
 
 
@@ -320,4 +316,11 @@ $ sudo brew update
 - [Homebrew官方推荐使用教程](http://brew.sh/index_zh-cn.html)
 - [安装卸载homebrew](http://www.cnblogs.com/chenjunbiao/archive/2011/07/11/2102899.html)
 - [官方源码库](https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Installation.md)
+
+# 更改app图标
+
+- 先复制你喜欢的app图标。操作：按 `⌘+i` 打开app的简介，点击左上角的app图标，⌘+c 复制
+
+- 在目标app简介中的图标上粘贴即可
+- 点击app简介中的图标按下`⌘+⌫`即可还原图标
 
