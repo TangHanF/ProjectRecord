@@ -1,3 +1,7 @@
+# Mac键盘符号映射
+
+![](https://ws1.sinaimg.cn/large/006tNc79ly1fr4c4kxmrij30iq0plwgn.jpg)
+
 # Finder
 
 - `⌘+⬆` 返回上一级目录
@@ -46,3 +50,4 @@
 - `⌘+⌫` 删除文件，移动到废纸篓，如果是在废纸篓里面按该组合键，则是将删除的内容还原😳
 - `Fn+⌫` 可以实现向后删除，类似于windos的Delete键，正常的⌫相当于Windows的BackSpace键
 - `⌘+⇧+S` 另存为
+- `⌘+⌥+H` 隐藏所有闲置的窗口
