@@ -83,6 +83,26 @@ http://www.mac52ipod.cn/post/Perian-QuickTime-AVI-Flv-MkV.php
 >
 > git config --global http.sslVerify false
 
+# Dock 栏加快显示速度
+
+Mac 中为了获得更大的可视空间，在不使用 Dock 时我们可以隐藏它。若要查看隐藏的 Dock，可以将指针移到 Dock 所在屏幕的边缘。但是这个显示速度存在了一定的延迟，为了加速这个过程，我们可以使用一段命令行，让你的隐藏 Dock 弹出的时候更加的顺滑流畅：
+
+```shell
+defaults write com.apple.Dock autohide-delay -float 0 && killall Dock
+```
+
+使用后的效果，可以说是非常明显了，再也不会有在「挤牙膏」的感觉。
+
+![img](https://cdn.sspai.com/2017/11/09/938e520e64d816a59123861e24efda34.gif?imageView2/2/w/1120/q/90/interlace/1/ignore-error/1)
+
+如果在你的使用下，Dock 栏上摆满了各类 App，却发现这不是自己想要的结果。你可以通过终端来重置你的 Dock 栏，让它回到最开始的状态：
+
+```shell
+defaults delete com.apple.dock; killall Dock
+```
+
+
+
 # Launchpad图标大小调整
 
 **终端输入**
