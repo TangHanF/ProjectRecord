@@ -398,7 +398,6 @@ HTML：
     });
     ```
 
-
 ------------------
 # Tab相关
 ## 在子窗体动态为父窗体增加tab选项卡
@@ -475,7 +474,6 @@ $("#btnAdd").click(function () {
 
     > 因内容较多，详细内容请移步：[点击此处查看](https://github.com/TangHanF/ProjectRecord/blob/master/%E5%89%8D%E7%AB%AF/LayUI/%E4%B8%BALayui%E7%9A%84Tab%E9%80%89%E9%A1%B9%E5%8D%A1%E5%A2%9E%E5%8A%A0%E5%85%B3%E9%97%AD%E5%BD%93%E5%89%8D%E3%80%81%E5%85%B3%E9%97%AD%E5%85%B6%E5%AE%83%E6%93%8D%E4%BD%9C.md)
 
-
 ------
 
 # 弹窗相关
@@ -487,8 +485,16 @@ $("#btnAdd").click(function () {
         </script>
     ```
 
+- 将弹窗扩展到整个屏幕，而非仅局限于父元素中
 
--------
+    ![](https://ws3.sinaimg.cn/large/006tKfTcly1frg09u0w7dj30ni09qweu.jpg)
+
+    > 在 iframe 外面的网页引入layer 的js 文件，然后：parent.layui.xxx
+
+    ![](https://ws1.sinaimg.cn/large/006tKfTcly1frg09dr7ivj31260l0tef.jpg)
+
+--------
+
  # Layui数据存储
  **官方说明：**
  > - localStorage 持久化存储：layui.data(table, settings)，数据会永久存在，除非物理删除
