@@ -4,6 +4,50 @@
 
 [TOC]
 
+# Spring Boot项目基本结构
+
+```
+com
+ +- example
+     +- myproject
+         +- Application.java
+         |
+         +- domain
+         |   +- Customer.java
+         |   +- CustomerRepository.java
+         |
+         +- service
+         |   +- CustomerService.java
+         |
+         +- web
+             +- CustomerController.java   
+```
+
+`Application.java`是应用的入库，一般放在根目录。
+
+所有的资源文件都统一放在resources目录下，结构如下:
+
+```
+static
+ +- css
+ |   +- style.css
+ |   +- common.css
+ +- js
+ |   +- index.js
+ +- img
+     +- img.png
+     
+templates
+ +- index.html
+ |   
+ +- pages
+ |   +- page.html
+```
+
+**我们所有的配置文件都默认放在在resources目录下**
+
+像CSS样式表、JavaScript文件、图片等静态资源都放在`static`目录下，HTML页面放在`template`目录下
+
 
 
 # Entity实体注意点
@@ -199,7 +243,7 @@ server.port=808112
 
 我们可以使用基于类型安全的配置方式，就是将properties属性和一个Bean关联在一起，这样使用起来会更加方便。我么来看看这种方式怎么实现。
 
-> 1.在src/main/resources文件夹下创建文件book.properties
+> 1.在src/main/resources文件夹下创建文件:book.properties
 
 文件内容如下：
 
@@ -255,7 +299,7 @@ prefix是指前缀，location指定要注入文件的位置。
 
 ```
 @Autowired
-private BookBean bookBean;12
+private BookBean bookBean;
 ```
 
 添加路径映射：
@@ -628,17 +672,17 @@ spring.thymeleaf.suffix=.html
 简单说， Thymeleaf 是一个跟 Velocity、FreeMarker 类似的模板引擎，它可以完全替代 JSP 。相较与其他的模板引擎，它有如下三个极吸引人的特点：
 
 1. Thymeleaf 在有网络和无网络的环境下皆可运行，即它可以让美工在浏览器查看页面的静态效果，也可以让程序员在服务器查看带数据的动态页面效果。这是由于它支持 html 原型，然后在 html 标签里增加额外的属性来达到模板+数据的展示方式。浏览器解释 html 时会忽略未定义的标签属性，所以 thymeleaf 的模板可以静态地运行；当有数据返回到页面时，Thymeleaf 标签会动态地替换掉静态内容，使页面动态显示。
-2. Thymeleaf 开箱即用的特性。它提供标准和spring标准两种方言，可以直接套用模板实现JSTL、 OGNL表达式效果，避免每天套模板、该jstl、改标签的困扰。同时开发人员也可以扩展和创建自定义的方言。
+2. Thymeleaf 开箱即用的特性。它提供标准和spring标准两种方言，可以直接套用模板实现JSTL、 OGNL表达式效果，避免每套模板、改jstl、改标签的困扰。同时开发人员也可以扩展和创建自定义的方言。
 3. Thymeleaf 提供spring标准方言和一个与 SpringMVC 完美集成的可选模块，可以快速的实现表单绑定、属性编辑器、国际化等功能。
 
 ## **标准表达式语法**
 
 它们分为四类：
 
-1. 变量表达式
-2. 选择或星号表达式
-3. 文字国际化表达式
-4. URL表达式
+1. **变量表达式**
+2. **选择或星号表达式**
+3. **文字国际化表达式**
+4. **URL表达式**
 
 ## **变量表达式**
 
@@ -695,7 +739,7 @@ spring.thymeleaf.suffix=.html
 
 ## **URL表达式**
 
-URL表达式指的是把一个有用的上下文或回话信息添加到URL，这个过程经常被叫做URL重写。 @{/order/list}
+URL表达式指的是把一个有用的上下文或会话信息添加到URL，这个过程经常被叫做URL重写。 @{/order/list}
 
 URL还可以设置参数： @{/order/details(id=${orderId})}
 
@@ -1243,4 +1287,71 @@ Ajax数据格式问题
 > 使用JSON.stringify()方法对Ajax的`data`进行处理，例如：
 >
 > **data: JSON.stringify({"ClassName": className, "MethodName": methodName,"JsonText": paramJsonArr})**
+
+
+
+# 自定义 Servlet
+
+## 1、编写 Servlet
+
+```java
+public class ServletTest extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doPost(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html;charset=utf-8");
+        resp.getWriter().write("自定义 Servlet");
+    }
+    
+}
+```
+
+## 2、注册 Servlet
+
+将 Servelt 注册成 Bean。在上文创建的 WebConfig 类中添加如下代码：
+
+```java
+@Bean
+public ServletRegistrationBean servletRegistrationBean() {
+    return new ServletRegistrationBean(new ServletTest(),"/servletTest");
+}
+```
+
+![image](http://images.extlight.com/springboot-web-04.jpg)
+
+# 日志格式化
+
+​	Spring Boot在所有内部日志中使用Commons Logging，但是默认配置也提供了对常用日志的支持，如：Java Util Logging，Log4J, Log4J2和Logback。每种Logger都可以通过配置使用控制台或者文件输出日志内容。
+Spring Boot默认的日志输出格式如下：
+
+```
+2014-03-05 10:57:51.112  INFO 45469 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/7.0.52
+2014-03-05 10:57:51.253  INFO 45469 --- [ost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2014-03-05 10:57:51.253  INFO 45469 --- [ost-startStop-1] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1358 ms
+2014-03-05 10:57:51.698  INFO 45469 --- [ost-startStop-1] o.s.b.c.e.ServletRegistrationBean        : Mapping servlet: 'dispatcherServlet' to [/]
+2014-03-05 10:57:51.702  INFO 45469 --- [ost-startStop-1] o.s.b.c.embedded.FilterRegistrationBean  : Mapping filter: 'h
+```
+
+默认情况下，Spring Boot只会将日志记录到控制台而不会写进日志文件。可以通过`logging.level.*=LEVEL`（'LEVEL'是TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF中的一个）设置的日志级别。如果除了输出到控制台你还想写入到日志文件，那你需要设置`logging.file`或`logging.path`属性。
+
+下面是一个使用YML配置打印路径及级别的例子：
+
+```
+logging:
+  level:
+    org.hibernate: ERROR
+    org.springframework : DEBUG
+      
+  path: /logs
+  file: myapp.log
+```
+
+**日志管理**  
+[Spring Boot 日志记录 SLF4J](http://blog.csdn.net/catoop/article/details/50501676)
+[Spring Boot日志管理](http://blog.didispace.com/springbootlog/)
 

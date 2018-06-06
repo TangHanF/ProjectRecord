@@ -159,6 +159,28 @@ public class WebConfiguration {
 # @Bean
 
 > 相当于 XML 中的,**放在方法的上面，而不是类**，意思是产生一个 bean, 并交给 spring 管理。
+>
+> @Bean是一个**方法级别**上的注解，[主要用在@Configuration注解的类里](mailto:%E4%B8%BB%E8%A6%81%E7%94%A8%E5%9C%A8@configuration%E6%B3%A8%E8%A7%A3%E7%9A%84%E7%B1%BB%E9%87%8C)，[也可以用在@Component注解的类里](mailto:%E4%B9%9F%E5%8F%AF%E4%BB%A5%E7%94%A8%E5%9C%A8@component%E6%B3%A8%E8%A7%A3%E7%9A%84%E7%B1%BB%E9%87%8C)。添加的bean的id为方法名
+
+配置一个Bean：
+
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public TransferService transferService() {
+        return new TransferServiceImpl();
+    }
+}
+```
+
+这个配置就等同于之前在xml里的配置
+
+```xml
+<beans>
+    <bean id="transferService" class="com.acme.TransferServiceImpl"/>
+</beans>
+```
 
 # @Component
 
@@ -178,9 +200,30 @@ public class WebConfiguration {
 
 > 指出该类是 Bean 配置的信息源，相当于 XML 中的，一般加在主类上。
 
-# @Bean
+# @Scope
 
-> 相当于 XML 中的,**放在方法的上面，而不是类**，意思是产生一个 bean, 并交给 spring 管理。
+Scope，也称**作用域**，在 Spring IoC 容器是指其创建的 Bean 对象相对于其他 Bean 对象的请求可见范围。在 Spring IoC 容器中具有以下几种作用域：`基本作用域`（singleton、prototype），`Web 作用域`（reqeust、session、globalsession），`自定义作用域`。 
+1、Spring 的作用域在装配 Bean 时就必须在配置文件中指明，配置方式如下（以 xml 配置文件为例）：
+
+```xml
+<!-- 具体的作用域需要在 scope 属性中定义 -->
+<bean id="XXX" class="com.XXX.XXXXX" scope="XXXX" />12
+```
+
+`singleton`：单例模式，在整个Spring IoC容器中，使用singleton定义的Bean将只有一个实例
+
+`prototype`：原型模式，每次通过容器的getBean方法获取prototype定义的Bean时，都将产生一个新的Bean实例
+
+`request`：对于每次HTTP请求，使用request定义的Bean都将产生一个新实例，即每次HTTP请求将会产生不同的Bean实例。只有在Web应用中使用Spring时，该作用域才有效
+
+`session`：对于每次HTTP Session，使用session定义的Bean豆浆产生一个新实例。同样只有在Web应用中使用Spring时，该作用域才有效
+
+`globalsession`：每个全局的HTTP Session，使用session定义的Bean都将产生一个新实例。典型情况下，仅在使用portlet context的时候有效。同样只有在Web应用中使用Spring时，该作用域才有效
+
+　　其中比较常用的是singleton和prototype两种作用域。对于singleton作用域的Bean，每次请求该Bean都将获得相同的实例。容器负责跟踪Bean实例的状态，负责维护Bean实例的生命周期行为；如果一个Bean被设置成prototype作用域，程序每次请求该id的Bean，Spring都会新建一个Bean实例，然后返回给程序。在这种情况下，Spring容器仅仅使用new 关键字创建Bean实例，一旦创建成功，容器不在跟踪实例，也不会维护Bean实例的状态。
+
+　　如果不指定Bean的作用域，Spring默认使用singleton作用域。Java在创建Java实例时，需要进行内存申请；销毁实例时，需要完成垃圾回收，这些工作都会导致系统开销的增加。因此，prototype作用域Bean的创建、销毁代价比较大。而singleton作用域的Bean实例一旦创建成功，可以重复使用。因此，除非必要，否则尽量避免将Bean被设置成prototype作用域。 
+　2、基于注解开发时，@scope完成bean的作用域配置默认是单例模式（singleton）如果需要设置的话可以修改对应值与以上提到的一致例如：@scope(“prototype”)
 
 # @EnableAutoConfiguration
 
@@ -267,3 +310,15 @@ public class ConnectionSettings {
 ## @ExceptionHandler
 
 > `@ExceptionHandler(Exception.class)`用在方法上面表示遇到这个异常就执行以下方法。
+
+# @RequestMapping 和 @GetMapping @PostMapping 区别
+
+@RequestMapping   和  @GetMapping @PostMapping 区别
+
+ 
+
+@GetMapping是一个组合注解，是@RequestMapping(method = RequestMethod.GET)的缩写。
+
+ 
+
+@PostMapping是一个组合注解，是@RequestMapping(method = RequestMethod.POST)的缩写。

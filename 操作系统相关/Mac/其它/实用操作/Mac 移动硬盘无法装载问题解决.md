@@ -8,7 +8,7 @@
 
 > /dev/disk0
 >
->    #:                       TYPE NAME                    SIZE       IDENTIFIER
+>    ###:   TYPE NAME                    SIZE       IDENTIFIER
 >
 >    0:      GUID_partition_scheme                        *250.1 GB   disk0
 >

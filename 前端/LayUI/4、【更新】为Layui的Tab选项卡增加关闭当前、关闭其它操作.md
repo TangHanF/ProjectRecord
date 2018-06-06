@@ -30,6 +30,7 @@
         <li data-type="closeothers">关闭非当前</li>
         <li data-type="closeleft">关闭左侧所有</li>
         <li data-type="closeright">关闭右侧所有</li>
+        <li data-type="refresh">刷新当前页</li>
         <li data-type="cancel"><i class="layui-icon layui-icon-yinshenim"></i>取消</li>
     </ul>
 ```
@@ -73,12 +74,23 @@ $(".rightmenu li").click(function () {
             var index = allTabIDArr.indexOf(currentActiveTabID);
             tabDeleteAll(allTabIDArr.slice(index + 1));
             break;
+        case "refresh":
+        // 重新加载iFrame，实现更新。注意：如果你不是使用的iFrame则无效，具体刷新实现自行处理                          //document.getElementById(currentActiveTabID).contentWindow.location.reload(true);//这种方式也可以，下面这个也可以
+             refreshiFrame();
+             break;
         default:
             $('.rightmenu').hide();
 
     }
     $('.rightmenu').hide();
 })
+
+
+function refreshiFrame() {
+    var $curFrame = $('iframe:visible');
+    $curFrame.attr("src",$curFrame.attr("src"));
+    return false;
+}
 ```
 --------------------
 ``` javascript
