@@ -669,11 +669,49 @@ spring.thymeleaf.suffix=.html
 
 # thymeleaf介绍
 
+> ​	Thymeleaf是一个XML/XHTML/HTML5模板引擎，可用于Web与非Web环境中的应用开发。它是一个开源的Java库，基于Apache License 2.0许可，由Daniel Fernández创建，该作者还是Java加密库Jasypt的作者。
+>
+> ​	Thymeleaf提供了一个用于整合Spring MVC的可选模块，在应用开发中，你可以使用Thymeleaf来完全代替JSP或其他模板引擎，如Velocity、FreeMarker等。Thymeleaf的主要目标在于提供一种可被浏览器正确显示的、格式良好的模板创建方式，因此也可以用作静态建模。你可以使用它创建经过验证的XML与HTML模板。相对于编写逻辑或代码，开发者只需将标签属性添加到模板中即可。接下来，这些标签属性就会在DOM（文档对象模型）上执行预先制定好的逻辑。
+
 简单说， Thymeleaf 是一个跟 Velocity、FreeMarker 类似的模板引擎，它可以完全替代 JSP 。相较与其他的模板引擎，它有如下三个极吸引人的特点：
 
-1. Thymeleaf 在有网络和无网络的环境下皆可运行，即它可以让美工在浏览器查看页面的静态效果，也可以让程序员在服务器查看带数据的动态页面效果。这是由于它支持 html 原型，然后在 html 标签里增加额外的属性来达到模板+数据的展示方式。浏览器解释 html 时会忽略未定义的标签属性，所以 thymeleaf 的模板可以静态地运行；当有数据返回到页面时，Thymeleaf 标签会动态地替换掉静态内容，使页面动态显示。
+1. Thymeleaf 在有网络和无网络的环境下皆可运行，即它可以让美工在浏览器查看页面的静态效果，也可以让程序员在服务器查看带数据的动态页面效果。这是由于它支持 html 原型，然后在 html 标签里**增加额外的属性来达到模板+数据的展示方式**。浏览器解释 html 时会忽略未定义的标签属性，所以 thymeleaf 的模板可以静态地运行；当有数据返回到页面时，Thymeleaf 标签会动态地替换掉静态内容，使页面动态显示。
 2. Thymeleaf 开箱即用的特性。它提供标准和spring标准两种方言，可以直接套用模板实现JSTL、 OGNL表达式效果，避免每套模板、改jstl、改标签的困扰。同时开发人员也可以扩展和创建自定义的方言。
 3. Thymeleaf 提供spring标准方言和一个与 SpringMVC 完美集成的可选模块，可以快速的实现表单绑定、属性编辑器、国际化等功能。
+
+--------
+
+> Spring Boot默认提供静态资源目录位置需置于classpath下，目录名需符合如下规则：
+>
+> - /static
+> - /public
+> - /resources
+> - /META-INF/resources
+>
+> 举例：我们可以在src/main/resources/目录下创建static目录，在该目录放置一个图片文件（logo.png）。启动程序后，尝试访问http://localhost:8080/logo.png。如能显示图片，配置成功。（不需要http://localhost:8080/static/logo.png）
+
+> Spring Boot提供了默认配置的模板引擎主要有以下几种：
+>
+> - **Thymeleaf**
+> - FreeMarker
+> - Velocity
+> - Groovy
+> - Mustache
+>
+> **Spring Boot建议使用这些模板引擎，避免使用JSP，若一定要使用JSP将无法实现Spring Boot的多种特性**
+>
+> 当使用上述模板引擎中的任何一个后，它们默认的模板配置路径为：`src/main/resources/templates`。当然也可以修改这个路径，具体如何修改，可在后续各模板引擎的配置属性中查询并修改。
+
+在Spring Boot中使用Thymeleaf，只需要引入下面依赖，并在默认的模板路径src/main/resources/templates下编写模板文件即可完成。
+
+```xml
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+```
+
+--------
 
 ## **标准表达式语法**
 
@@ -747,7 +785,7 @@ URL还可以设置参数： @{/order/details(id=${orderId})}
 
 让我们看这些表达式：
 
-```
+```html
 <form th:action="@{/createOrder}">  
 <a href="main.html" th:href="@{/main}">
 ```
@@ -760,7 +798,7 @@ URL还可以设置参数： @{/order/details(id=${orderId})}
 
 什么是选定对象？就是父标签的值，如下：
 
-```
+```html
 <div th:object="${session.user}">
   <p>Name: <span th:text="*{firstName}">Sebastian</span>.</p>
   <p>Surname: <span th:text="*{lastName}">Pepper</span>.</p>
@@ -772,7 +810,7 @@ URL还可以设置参数： @{/order/details(id=${orderId})}
 
 这是完全等价于：
 
-```
+```html
 <div th:object="${session.user}">
     <p>Name: <span th:text="${session.user.firstName}">Sebastian</span>.</p>
     <p>Surname: <span th:text="${session.user.lastName}">Pepper</span>.</p>
@@ -784,7 +822,7 @@ URL还可以设置参数： @{/order/details(id=${orderId})}
 
 当然，美元符号和星号语法可以混合使用：
 
-```
+```html
 <div th:object="${session.user}">
     <p>Name: <span th:text="*{firstName}">Sebastian</span>.</p>
     <p>Surname: <span th:text="${session.user.lastName}">Pepper</span>.</p>
@@ -836,11 +874,31 @@ URL还可以设置参数： @{/order/details(id=${orderId})}
 
 ## **常用th标签**
 
-![img](assets/640-1524133968480)
-
-![img](assets/640-1524133990203)
-
-![201707203](assets/640)
+| 关键字      | 功能介绍                                     | 案例                                                         |
+| ----------- | -------------------------------------------- | ------------------------------------------------------------ |
+| th:id       | 替换id                                       | `<input th:id="'xxx' + ${collect.id}"/>`                     |
+| th:text     | 文本替换                                     | `<p th:text="${collect.description}">description</p>`        |
+| th:utext    | 支持html的文本替换                           | `<p th:utext="${htmlcontent}">conten</p>`                    |
+| th:object   | 替换对象                                     | `<div th:object="${session.user}">`                          |
+| th:value    | 属性赋值                                     | `<input th:value="${user.name}" />`                          |
+| th:with     | 变量赋值运算                                 | `<div th:with="isEven=${prodStat.count}%2==0"></div>`        |
+| th:style    | 设置样式                                     | `th:style="'display:' + @{(${sitrue} ? 'none' : 'inline-block')} + ''"` |
+| th:onclick  | 点击事件                                     | `th:onclick="'getCollect()'"`                                |
+| th:each     | 属性赋值                                     | `tr th:each="user,userStat:${users}">`                       |
+| th:if       | 判断条件                                     | `<a th:if="${userId == collect.userId}" >`                   |
+| th:unless   | 和th:if判断相反                              | `<a th:href="@{/login}" th:unless=${session.user != null}>Login</a>` |
+| th:href     | 链接地址                                     | `<a th:href="@{/login}" th:unless=${session.user != null}>Login</a> />` |
+| th:switch   | 多路选择 配合th:case 使用                    | `<div th:switch="${user.role}">`                             |
+| th:case     | th:switch的一个分支                          | `<p th:case="'admin'">User is an administrator</p>`          |
+| th:fragment | 布局标签，定义一个代码片段，方便其它地方引用 | `<div th:fragment="alert">`                                  |
+| th:include  | 布局标签，替换内容到引入的文件               | `<head th:include="layout :: htmlhead" th:with="title='xx'"></head> />` |
+| th:replace  | 布局标签，替换整个标签到引入的文件           | `<div th:replace="fragments/header :: title"></div>`         |
+| th:selected | selected选择框 选中                          | `th:selected="(${xxx.id} == ${configObj.dd})"`               |
+| th:src      | 图片类地址引入                               | `<img class="img-responsive" alt="App Logo" th:src="@{/img/logo.png}" />` |
+| th:inline   | 定义js脚本可以使用变量                       | `<script type="text/javascript" th:inline="javascript">`     |
+| th:action   | 表单提交的地址                               | `<form action="subscribe.html" th:action="@{/subscribe}">`   |
+| th:remove   | 删除某个属性                                 | `<tr th:remove="all"> 1.all:删除包含标签和所有的孩子。2.body:不包含标记删除,但删除其所有的孩子。3.tag:包含标记的删除,但不删除它的孩子。4.all-but-first:删除所有包含标签的孩子,除了第一个。5.none:什么也不做。这个值是有用的动态评估。` |
+| th:attr     | 设置标签属性，多个属性可以用逗号分隔         | 比如 `th:attr="src=@{/image/aa.jpg},title=#{logo}"`，此标签不太优雅，一般用的比较少。 |
 
 还有非常多的标签，这里只列出最常用的几个,由于一个标签内可以包含多个th:x属性，其生效的优先级顺序为: include,each,if/unless/switch/case,with,attr/attrprepend/attrappend,value/href,src ,etc,text/utext,fragment,remove。
 
@@ -858,37 +916,31 @@ URL还可以设置参数： @{/order/details(id=${orderId})}
 
 **2、条件判断 If/Unless**
 
-Thymeleaf中使用th:if和th:unless属性进行条件判断，下面的例子中，<a>标签只有在th:if中条件成立时才显示：
+Thymeleaf中使用th:if和th:unless属性进行条件判断，下面的例子中，`<a>`标签只有在`th:if`中条件成立时才显示：
 
-> <a th:if="${myself=='yes'}" > </i> </a>
->
-> <a th:unless=${session.user != null} th:href="@{/login}" >Login</a>
+```html
+<a th:if="${myself=='yes'}" > </i> </a>
+<a th:unless=${session.user != null} th:href="@{/login}" >Login</a>
+```
 
 th:unless于th:if恰好相反，只有表达式中的条件不成立，才会显示其内容。
 
-也可以使用 (if) ? (then) : (else) 这种语法来判断显示的内容
+也可以使用 `(if) ? (then) : (else)` 这种语法来判断显示的内容
 
 **3、for 循环**
 
-> <tr  th:each="collect,iterStat : ${collects}"> 
->
-> ​    <th scope="row" th:text="${collect.id}">1</th>
->
-> ​    <td >
->
-> ​       <img th:src="${collect.webLogo}"/>
->
-> ​    </td>
->
-> ​    <td th:text="${collect.url}">Mark</td>
->
-> ​    <td th:text="${collect.title}">Otto</td>
->
-> ​    <td th:text="${collect.description}">@mdo</td>
->
-> ​    <td th:text="${terStat.index}">index</td>
->
-> </tr>
+```
+ <tr  th:each="collect,iterStat : ${collects}"> 
+     <th scope="row" th:text="${collect.id}">1</th>
+     <td >
+        <img th:src="${collect.webLogo}"/>
+     </td>
+     <td th:text="${collect.url}">Mark</td>
+     <td th:text="${collect.title}">Otto</td>
+     <td th:text="${collect.description}">@mdo</td>
+     <td th:text="${terStat.index}">index</td>
+ </tr>
+```
 
 iterStat称作状态变量，属性有：
 
@@ -902,31 +954,34 @@ iterStat称作状态变量，属性有：
 
 **4、URL**
 
-URL在Web应用模板中占据着十分重要的地位，需要特别注意的是Thymeleaf对于URL的处理是通过语法@{…}来处理的。 如果需要Thymeleaf对URL进行渲染，那么务必使用th:href，th:src等属性，下面是一个例子
+URL在Web应用模板中占据着十分重要的地位，[需要特别注意的是Thymeleaf对于URL的处理是通过语法@{](mailto:%E9%9C%80%E8%A6%81%E7%89%B9%E5%88%AB%E6%B3%A8%E6%84%8F%E7%9A%84%E6%98%AFThymeleaf%E5%AF%B9%E4%BA%8EURL%E7%9A%84%E5%A4%84%E7%90%86%E6%98%AF%E9%80%9A%E8%BF%87%E8%AF%AD%E6%B3%95@%7B)...}来处理的。
+如果需要Thymeleaf对URL进行渲染，那么务必使用th:href，th:src等属性，下面是一个例子
 
-> <!-- Will produce 'http://localhost:8080/standard/unread' (plus rewriting) -->
->
->  <a  th:href="@{/standard/{type}(type=${type})}">view</a>
->
->  
->
-> <!-- Will produce '/gtvg/order/3/details' (plus rewriting) -->
->
-> <a href="details.html" th:href="@{/order/{orderId}/details(orderId=${o.id})}">view</a>
+```html
+<!-- Will produce 'http://localhost:8080/standard/unread' (plus rewriting) -->
+ <a  th:href="@{/standard/{type}(type=${type})}">view</a>
+
+<!-- Will produce '/gtvg/order/3/details' (plus rewriting) -->
+<a href="details.html" th:href="@{/order/{orderId}/details(orderId=${o.id})}">view</a>
+```
 
 设置背景
 
-> <div th:style="'background:url(' + @{/<path-to-image>} + ');'"></div>
+```html
+<div th:style="'background:url(' + @{/<path-to-image>} + ');'"></div>
+```
 
 根据属性值改变背景
 
-> <div class="media-object resource-card-image" th:style="'background:url(' + @{(${collect.webLogo}=='' ? 'img/favicon.png' : ${collect.webLogo})} + ')'" ></div>
+```html
+ <div class="media-object resource-card-image"  th:style="'background:url(' + @{(${collect.webLogo}=='' ? 'img/favicon.png' : ${collect.webLogo})} + ')'" ></div>
+```
 
 几点说明：
 
-- 上例中URL最后的(orderId=${o.id}) 表示将括号内的内容作为URL参数处理，该语法避免使用字符串拼接，大大提高了可读性
-- @{…}表达式中可以通过{orderId}访问Context中的orderId变量
-- @{/order}是Context相关的相对路径，在渲染时会自动添加上当前Web应用的Context名字，假设context名字为app，那么结果应该是/app/order
+- 上例中URL最后的`(orderId=${o.id})` 表示将括号内的内容作为URL参数处理，该语法避免使用字符串拼接，大大提高了可读性
+- `@{...}`表达式中可以通过`{orderId}`访问Context中的orderId变量
+- `@{/order}`是Context相关的相对路径，在渲染时会自动添加上当前Web应用的Context名字，假设context名字为app，那么结果应该是/app/order
 
 **5、内联js**
 
