@@ -1,6 +1,10 @@
-> Created By:TangHanF
+> 作者：TangHanF（GuoFu）
 >
-> Created Date:2018年4月18日
+> 日期：2018年4月18日
+>
+> 说明：转载请注明出处，谢谢！🤝
+>
+> 联系方式：guofu_gh@163.com
 
 ------------
 
