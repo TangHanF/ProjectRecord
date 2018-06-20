@@ -5,7 +5,7 @@ Tab
 
 # 文档结构模型
 
-![](https://ws1.sinaimg.cn/large/006tKfTcly1fsgayx347mj30h907pdg4.jpg)
+![](https://ws3.sinaimg.cn/large/006tNc79ly1fshhjx6251j30h907pt8w.jpg)
 
 ![](https://ws3.sinaimg.cn/large/006tKfTcly1fsgazzb6dtj30m70elq5n.jpg)
 
