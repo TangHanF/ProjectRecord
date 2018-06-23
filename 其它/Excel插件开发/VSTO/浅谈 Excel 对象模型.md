@@ -26,15 +26,15 @@
 
  
 
-以上是Excel文档对象模型的大概全部的对象模型。其中最重要的几个对象为Application，Workbook，Worksheet 和Range对象。下面就简单介绍下这些对象中的一些属性，方法及事件。
+​	以上是Excel文档对象模型的大概全部的对象模型。其中最重要的几个对象为Application，Workbook，Worksheet 和Range对象。下面就简单介绍下这些对象中的一些属性，方法及事件。
 
 # 二 Application对象
 
-Application是根对象，代表着Excel应用程序本身，一切Excel中的其他对象都有它直接或者间接创建。 您可以回想到前面我们在Shared Add-in项目中创建Excel菜单和工具条时接触到的对象。我们首先是在Connect方法中保存了 application对象，然后在该对象上创建了MenuBar和Toolbar。Application对象有一些熟悉，事件和方法，在我们编程中经常会用到，现在就稍微讲一下：
+​	Application是根对象，代表着Excel应用程序本身，一切Excel中的其他对象都有它直接或者间接创建。 您可以回想到前面我们在Shared Add-in项目中创建Excel菜单和工具条时接触到的对象。我们首先是在Connect方法中保存了 application对象，然后在该对象上创建了MenuBar和Toolbar。Application对象有一些熟悉，事件和方法，在我们编程中经常会用到，现在就稍微讲一下：
 
 ## 2.1 Application中控制Excel状态和显示的方法和属性
 
-Application中控制Excel状态和显示的方法和属性有很多，表一中列出了常用的几个属性。有一个属性是需要重新启用后才可以生效的。
+​	Application中控制Excel状态和显示的方法和属性有很多，表一中列出了常用的几个属性。有一个属性是需要重新启用后才可以生效的。
 
 | 属性                      | 类型                | 说明                                                         |
 | ------------------------- | ------------------- | ------------------------------------------------------------ |
@@ -49,9 +49,7 @@ Application中控制Excel状态和显示的方法和属性有很多，表一中�
 | TemplatesPath (read-only) | String              | 返回Excel模板加载的路径，通常为Windows的特殊目录.            |
 | DisplayAlerts             | Boolean             | 如果设置为true，在某些情况下，比如我们的代码删除一个sheet页，Excel会弹出提示框提醒用户。如果设置为false，则不显示提示框，Excel默认选择默认项。 |
 
- 
-
-上面列出的属性中，最可能用到的是ScreenUpdating属性，正确使用该属性能够大幅提高应用程序的性能。默认的，该属性为true，即每一次修改就会刷新整个界面，这会使得应用程序变慢，尤其是在往单元格填充大量数据的时候。所以一般的做法是，在填充数据之前保存ScreenUpdating属性，然后将ScreenUpdating属性设置为false，禁止屏幕刷新，然后填充数据，最后将之前保存的ScreenUpdating属性赋值回来。下面的代码演示了这一做法：
+​	上面列出的属性中，最可能用到的是ScreenUpdating属性，正确使用该属性能够大幅提高应用程序的性能。默认的，该属性为true，即每一次修改就会刷新整个界面，这会使得应用程序变慢，尤其是在往单元格填充大量数据的时候。所以一般的做法是，在填充数据之前保存ScreenUpdating属性，然后将ScreenUpdating属性设置为false，禁止屏幕刷新，然后填充数据，最后将之前保存的ScreenUpdating属性赋值回来。下面的代码演示了这一做法：
 
 ```
 Boolean oldScreenUpdate = this.Application.ScreenUpdating;
@@ -69,27 +67,27 @@ finally
 
 ## 2.2 Application中返回的对象
 
-从Application对象中可以获取很多有用的对象。如ActiveCell返回当前活动的单元格;ActiveChart,返回当前选中的活动的图表；ActiveSheet、ActiveWindows分别返回活动的Sheet页和窗口；Selection属性返回当前选中的对象，可能是Range，Worksheet或者是一个窗体；Workbooks，Sheets，Charts返回当前Excel中所有工作簿，工作表，图表的集合。
+​	从Application对象中可以获取很多有用的对象。如ActiveCell返回当前活动的单元格;ActiveChart,返回当前选中的活动的图表；ActiveSheet、ActiveWindows分别返回活动的Sheet页和窗口；Selection属性返回当前选中的对象，可能是Range，Worksheet或者是一个窗体；Workbooks，Sheets，Charts返回当前Excel中所有工作簿，工作表，图表的集合。
 
-通常，我们接触最多的是Application对象的Workbooks属性，该对象是当前Excel打开的所有的工作簿文件。一个Workbook就是一个.xls或者.xlsx文件。下面简单讲解Workbooks对象。
+​	通常，我们接触最多的是Application对象的Workbooks属性，该对象是当前Excel打开的所有的工作簿文件。一个Workbook就是一个.xls或者.xlsx文件。下面简单讲解Workbooks对象。
 
 - 创建一个新的workbook对象 通过Applicaition的Workbooks对象的Add方法可以创建一个新的工作簿。
 
-```
+```c#
 // Create a new workbook object
 Excel.Workbook wb = this.Application.Workbooks.Add(Type.Missing);
 ```
 
 - 关闭所有的workbook对象 通过调用close对象可以关闭所有的工作簿。
 
-```
+```c#
 // Close all workbooks
 this.Application.Workbooks.Close();
 ```
 
 - 打开一个Excel文件 通过Open方法可以打开一个本地的Excel文件，Open方法有很多定制化参数，如果不需要制定的话，传入Type.Missing即可。
 
-```
+```c#
 // Open an exist workbook
 Excel.Workbook wbOpenExistFile = this.Application.Workbooks.Open(
     "C:\\YourPath\\Yourworkbook.xls",
@@ -107,7 +105,7 @@ Excel.Workbook wbOpenExistFile = this.Application.Workbooks.Open(
 
 有时候我们可能需要从当前的工作簿文件中，找到指定的工作簿文件进行操作。一般的我们可以通过Workbooks属性通过索引器传入index来返回，或者通过工作簿名称来返回。需要注意的是，工作簿没有保存前，不需要后缀，保存后需要带上后缀来进行访问，代码如下：
 
-```
+```c#
 //Get an exist workbook form current workbooks
 Excel.Workbook wbFind =  this.Application.Workbooks[1];
 // Before Book1 is saved:
@@ -122,7 +120,7 @@ Application对象提供了一些方法，包括单元格的重新计算，撤销
 
 - Calculate方法：该方法强制所有打开的工作簿，特定的工作簿，或者指定的Range对象进行重新计算。
 
-```
+```c#
 //  Cell calculate
 this.Application.Calculate();
 // Or...
@@ -141,7 +139,7 @@ this.Application.get_Range("A1", "B12").Calculate();
 - RecentFiles 最近使用文件属性，返回一系列最近使用的文件名
 - FileDialog 属性，该属性返回一个FileDialog对象，他能够处理四种类型的文件操作，包括：选择文件并打开，选择文件路径并保存当前工作簿，选择目录和选择文件名。使用Dialog窗体，我们可以利用Office提供的各种文件处理能力。其文件类型通过指定FileDialog类型来实现，该类型是一个msoFileDialogType枚举，包含msoFileDialogFilePicker，msoFileDialogFolderPicker，msoFileDialogOpen和msoFileDialogSaveAs四个枚举值。FileDialog对象存在于Microsoft.Office.Core命名空间中。FileDialog的Show方法弹出一个对话框，如果返回-1表示拥护点击了OK按钮，如果是0表示拥护按下了Cancel按钮，如果使用msoFileDialogOpen或者msoFileDialogSaveAs枚举值，FileDialog的Execute方法会执行打开或者保存文件的操作。SelectedItems属性包含了一些列的字符串，它表示选中的一些列文件名称。下面代码演示了如何使用。
 
-```
+```c#
 //using FileDialog to open an exist file
 Office.FileDialog dlg = this.Application.get_FileDialog(
     Office.MsoFileDialogType.msoFileDialogOpen);
@@ -158,7 +156,7 @@ Application中还有一些其他有用的对象，如WorksheetFunction，该对�
 
 - WorksheetFunction 下面演示了WorksheetFunction的用法：
 
-```
+```c#
 Excel.Worksheet ws = (Excel.Worksheet)this.Application.ActiveSheet;
 Excel.Range rng = ws.get_Range("RandomNumbers", Type.Missing);
 System.Random rnd = new System.Random();
@@ -190,7 +188,7 @@ ws.get_Range("Min", Type.Missing).Value2 = wsf.Min(rng,
 
 - Windows对象 Application的Windows对象提供了对Excel窗体进行打开，关闭重新排列的方法。可以调用该对象的Arrange方法来对所有的窗体进行重新排列，我们需要指定XlArrangeStyle枚举：
 
-```
+```c#
 // Arrange the windows
 this.Application.Windows.Arrange(
   Excel.XlArrangeStyle.xlArrangeStyleTiled,
@@ -199,7 +197,7 @@ this.Application.Windows.Arrange(
 
 - Name对象 该对象对应了Excel中的名称管理器，这些名称对应了一些Range对象，这在绘制图表，以及一些对函数公式长度有限制的地方很有用处，Application对象的Name属性返回了Excel中有所名字对象的集合。要创建命名Range对象，调用Names的Add方法即可。
 
-```
+```c#
 //Add a name range
 Excel.Name nm = this.Application.Names.Add(
 "NewName", @"='Other Application Members'!$A$6",
@@ -210,7 +208,7 @@ Type.Missing, Type.Missing, Type.Missing);
 
 后面使用该名称即可找到该名称代表的Range对象：
 
-```
+```c#
 // Retrive a name Range
 this.Application.get_Range("NewName", Type.Missing).Value2 = "Hello, World!";
 ```
@@ -266,7 +264,7 @@ Excel文档允许用户将一些信息保存到文件属性中。Excel提供了�
 
 Workbook类的BuiltInDocumentProperties属性可以获取和设置那只的属性，CustomDocumentProperties可以获取和设置自定义属性。属性以键值对表示，我们可以使用属性的关键字或者Index来获取属性。下面的代码演示了获取所有的内置和自定义的属性，DumpPropertyCollection方法用来打印属性。
 
-```
+```c#
 //Display the document property
 private void DisplayDocumentProperties()
 {
@@ -374,7 +372,7 @@ private int DumpPropertyCollection(
 
 我们可以通过Workbook的Styles属性来对这些文档样式进行添加，修改和删除。下面代码演示了如何创建或者修改一个样式：
 
-```
+```c#
 // Apply Style
 private void ApplyStyle()
 {
@@ -407,7 +405,7 @@ private void ApplyStyle()
 
 Workbook的Sheets属性返回该工作簿包含的所有工作表对象。这些对象可以是工作表也可以是Chart对象，下面的代码列出了当前工作簿中的所有对象。
 
-```
+```c#
 // Show all the workSheet name in the active workbook
 private void ListSheets()
 {
@@ -429,7 +427,7 @@ WorkSheet有一些很有用的属性和方法：
 
 - Visible属性：该属性控制工作表的可见性：Visibility属性是一个XlSheetVisibility枚举类型，之分别为XlSheetHidden，XlSheetVeryHidden，XlSheetVisible。使用XlSheetHidden，允许用户通过Excel界面来显示工作表。而XlSheetVeryHidden，则需要使用代码来显示工作表。一般的，我们可以将一些临时数据存放到VeryHidden的工作表中，然后使用名字管理器或者直接地址来引用。下面代码展示了如何设置WorkSheet的Visible属性。
 
-```
+```c#
 // Hide Worksheet
 private void HideTheSheet()
 {
@@ -440,14 +438,14 @@ private void HideTheSheet()
 
 - Add方法：Add方法允许我们创建新的工作表。
 
-```
+```c#
 Excel.Worksheet sh = this.Application.Sheets.Add(
     Type.Missing, Type.Missing, Type.Missing, Type.Missing);
 ```
 
 - Copy方法：Copy方法允许我们对工作表进行整体拷贝。拷贝的时候，可以指定新工作表的位置，是位于某一个指定的工作表之前还是之后。下面的代码，将工作表1种的内容拷贝到第三个工作表之后的新建的工作表中。
 
-```
+```c#
 //Copy Worksheet
 ((Excel.Worksheet) this.Application.ActiveWorkbook.Sheets[1]).
     Copy(Type.Missing, this.Application.ActiveWorkbook.Sheets[3]);
@@ -456,7 +454,7 @@ Excel.Worksheet sh = this.Application.Sheets.Add(
 - Delete方法：该方法用于从工作簿中删除指定的工作表。
 - FillAcrossSheets方法用于拷贝某个Sheet中的Range对象到该工作簿中的其他工作表中。可以指定一个区间，然后指定拷贝的方式，是拷贝数据，样式，还是所有的都拷贝。下面的代码演示拷贝名为Data的Range的数据及样式到该工作簿中的所有其他工作表中。
 
-```
+```c#
 // Fill across sheet method
 this.Application.ActiveWorkbook.Sheets.FillAcrossSheets(
     this.Application.get_Range("Data", Type.Missing),
@@ -465,7 +463,7 @@ this.Application.ActiveWorkbook.Sheets.FillAcrossSheets(
 
 - Move方法：Move方法和Copy方法类似。他将Sheet移动到某一个Sheet之前或者之后。下面的代码将第一个Sheet也移动到最后。
 
-```
+```c#
 // move Worksheet
 Excel.Sheets shts = this.Application.ActiveWorkbook.Sheets;
 ((Excel.Worksheet)shts[1]).Move(Type.Missing, shts[shts.Count]);
@@ -473,7 +471,7 @@ Excel.Sheets shts = this.Application.ActiveWorkbook.Sheets;
 
 - PrintOut方法：该方法用于打印指定的对象，方法接受众多参数，包括，需要打印的页数，打印的份数，打印之前是否预览，打印机名称，是否打印到文件中，是否校对，指定打印的文件名称等。下面的例子展示了打印方法，该方法指定了纸打印第一页，打印两份，打印之前预览，并采用默认的打印机打印。
 
-```
+```c#
 // print out method
 ((Excel.Worksheet)this.Application.ActiveWorkbook.Sheets[1]).
     PrintOut(1, 1, 2, true, Type.Missing, Type.Missing,
@@ -493,28 +491,28 @@ Workbook代表一个工作簿，他也提供了很多方法，其中一些方法
 
 - Active方法，该方法用来激活一个工作簿，并将该工作簿中的第一个工作表选中。
 
-```
+```c#
 // Active a workbook
 ((Excel._Workbook)this.Application.Workbooks[1]).Activate();
 ```
 
 - Close方法用来关闭一个工作簿，可以指定是否在关闭之前保存修改，如果该工作簿是新建的，没有保存过，您可以指定一个文件名。下面的代码演示了保存一个工作簿并放弃修改。
 
-```
+```c#
 // Close a workbook without save changes
 this.Application.Workbooks[1].Close(false,Type.Missing, Type.Missing);
 ```
 
 - Protect和Unprotect方法：该方法用来保护和解除保护一个工作表不被用户添加或者修改，一般在自定义模板中用的比较多。方法可以指定密码，以及指定是否保存文档的结构，比如是否允许用户自由移动里面的工作表；指定是否工作簿的窗口需要保护。对工作簿进行保护并不能阻止用户编辑工作表里面的内容。 要保护工作表里面的内容，您需要对工作表Worksheets进行保护。使用Unprotect方法传递密码可以解除保护。下面的代码演示了如何对一个工作簿进行保护。
 
-```
+```c#
 // Protect a workbook use password
 this.Application.Workbooks[1].Protect("your password", Type.Missing, Type.Missing);
 ```
 
 - Save方法，该方法用来对工作簿进行保存。如果是新建的工作簿，之前没有进行过保存，那么您应该调用SaveAs方法，传入方法路径加名称。如果没有保存过，调用Save方法的话，Excel会以创建时默认的工作簿名称以及在用户文档目录下保存文件。
 
-```
+```c#
 // Save all open workbooks.
 foreach (Excel.Workbook wb in this.Application.Workbooks)
 {
@@ -524,7 +522,7 @@ foreach (Excel.Workbook wb in this.Application.Workbooks)
 
 - SaveAs方法，该方法比Save方法更复杂，能够允许保存指定的工作簿，能够设置工作簿的名称，文件格式，读写模式等。下面的代码演示了保存当前的工作表到一个特定的目录，格式为xml。需要注意的是，在调用SaveAs方法的时候，可能需要将Application.DisplayAlerts属性设置为false，因为在另存为某些其他格式的时候，可能会弹出交互界面需要进行一些其他的设置。比如说，将工作簿保存为XML格式的时候，Excel会提醒你会不会将工作簿中的VBA保存到XML格式中去。如果将Application.DisplayAlerts属性设置为false，则不会弹出提示框。
 
-```
+```c#
 // Save as the active workbook
 this.Application.ActiveWorkbook.SaveAs("C:\\MyWorkbook.xml",
     Excel.XlFileFormat.xlXMLSpreadsheet, Type.Missing,
@@ -535,7 +533,7 @@ this.Application.ActiveWorkbook.SaveAs("C:\\MyWorkbook.xml",
 
 - SaveCopyAs方法，该方法拷贝并保存某个文件的一个副本，部队当前在内存中打开的工作表产生影响。通常在我们需要对文件进行备份的时候很有用。但是需要注意的是，在保存或者拷贝的时候，如果没有设置Application.DisplayAlerts为false的时候，当Excel弹出保存提示框的时候，如果您点击取消，那么代码会抛出运行时异常。
 
-```
+```c#
 // save a copy of the activeworkbooks
 this.Application.ActiveWorkbook.SaveCopyAs("C:\\Test.xls");
 ```
@@ -558,7 +556,7 @@ this.Application.ActiveWorkbook.SaveCopyAs("C:\\Test.xls");
 
 在代码中，我们可以通过调用Worksheet的Protect方法来实现，该方法有很多参数进行配置。其方法签名如下：
 
-```
+```c#
 // Worksheet protect method signature
 WorksheetObject.Protect(Password, DrawingObjects, Contents,
   Scenarios, UserInterfaceOnly, AllowFormattingCells,
@@ -578,7 +576,7 @@ WorksheetObject.Protect(Password, DrawingObjects, Contents,
 
 下面是一个使用Protect方法对工作表进行保护的例子，该方法设置了保护密码，并仅允许对数据进行排序:
 
-```
+```c#
 ((Excel.Worksheet)this.Application.Sheets[1]).Protect(
 "MyPassword", Type.Missing, Type.Missing, Type.Missing,
 Type.Missing, Type.Missing, Type.Missing, Type.Missing,
@@ -598,7 +596,7 @@ Worksheet对象还有几个返回Object类型的属性。
 
 下面的代码演示了如果注释存在，删除，然后添加注释。后面演示了如何通过代码演示和现实所有注释：
 
-```
+```c#
 Excel.Range rng = this.Application.get_Range("Date", Type.Missing);
 if (rng.Comment != null)
 {
@@ -614,7 +612,7 @@ Worksheet类提供了Comments属性，该属性返回一个Comments对象，该�
 
 添加完成注释之后，我们可能希望在工作表中显示注释。下面就是在当前活动工作表中显示或者隐藏注释的代码。
 
-```
+```c#
 private void ShowOrHideComments(bool show)
 {
     // Show or hide all the comments:
@@ -648,7 +646,7 @@ Range对象是在Excel开发中用的最多的队形，在我们对Excel进行�
 
 下面的代码用来清除用户当前单元格中的内容。
 
-```
+```c#
 // clear select content
 this.Application.ActiveCell.CurrentRegion.Select();
 ((Excel.Range)this.Application.Selection).ClearContents();
@@ -656,7 +654,7 @@ this.Application.ActiveCell.CurrentRegion.Select();
 
 上面的代码会使得用户当前的选择区域丢失。如果之前只有一个单元格被选中，那么在运行上面的代码之后，整个连续的单元格都回被选中了。除非我们的目的就是这样，要选择整个Range返回内的单元格，一个更好的方法可能是：
 
-```
+```c#
 this.Application.ActiveCell.CurrentRegion.ClearContents();
 ```
 
@@ -668,7 +666,7 @@ this.Application.ActiveCell.CurrentRegion.ClearContents();
 
 - Application 的ActiveCell属性，该属性返回一个Range对象，表示当前活动的单元格：
 
-```
+```c#
 Excel.Worksheet ws = (Excel.Worksheet)this.Application.Worksheets[1];
 Excel.Range  rng1, rng2;
 rng1 = this.Application.ActiveCell;
@@ -676,20 +674,20 @@ rng1 = this.Application.ActiveCell;
 
 - 通过其他对象的get_Range方法传入地址获取。
 
-```
+```c#
 rng = ws.get_Range("A1", Type.Missing);
 rng = ws.get_Range("A1:B12", Type.Missing);
 ```
 
 - 通过Worksheet的Cells属性，传入行列号获取：
 
-```
+```c#
 rng = (Excel.Range)ws.Cells[1, 1];
 ```
 
 - 指定Range对象的区域边界； 可以通过range对象的Cells，Rows和Columns属性来返回另外一个Range对象。
 
-```
+```c#
 rng = ws.get_Range("A1", "C5");
 rng = ws.get_Range("A1", "C5").Cells;
 rng = ws.get_Range("A1", "C5").Rows;
@@ -698,13 +696,13 @@ rng = ws.get_Range("A1", "C5").Columns;
 
 - 通过名称管理器引用Range对象
 
-```
+```c#
 rng = this.Application.get_Range("SomeRangeName", Type.Missing);
 ```
 
 - 通过引用行或者列来获取Range对象
 
-```
+```c#
 rng = (Excel.Range)ws.Rows[1, Type.Missing];
 rng = (Excel.Range)ws.Rows["1:3", Type.Missing];
 rng = (Excel.Range)ws.Columns[3, Type.Missing];
@@ -712,7 +710,7 @@ rng = (Excel.Range)ws.Columns[3, Type.Missing];
 
 - 通过对两个Range对象的求并集，返回新的Range对象
 
-```
+```c#
 // C#
 rng = this.Application.get_Range("A1:D4, F2:G5", Type.Missing);
 // You can also use the Application object's Union
@@ -734,7 +732,7 @@ rng = this.Application.Union(rng1, rng2,
 
 - 通过对两个Range对象的求交集，返回新的Range对象
 
-```
+```c#
 rng = this.Application.get_Range("A1:D16 B2:F14", Type.Missing);
 // You can also use the Application object's Intersect
 // method to retrieve the intersection of two ranges. Note
@@ -753,7 +751,7 @@ rng = this.Application.Intersect(rng1, rng2,
 
 - 通过对原始Range对象的取偏移，获取新的Range对象。对原始Range对象取便宜实用Offset函数实现
 
-```
+```c#
 rng = (Excel.Range)ws.Cells[1, 1];
 for (int i = 1; i <= 5; i++)
 {
@@ -763,7 +761,7 @@ for (int i = 1; i <= 5; i++)
 
 - 通过Range对象的End属性，传入XlDirection参数，可以获取四个方向的边界的Range对象
 
-```
+```c#
 Excel.Range rngLeft, rngRight, rngUp, rngDown;
 rng = (Excel.Range)this.Application.Selection;
 // Note that the Range.End property is parameterized, so 
@@ -787,7 +785,7 @@ rngDown = rng.get_End(Excel.XlDirection.xlDown);
 
 - 自动填充 Range对象的AutoFill方法是的我们可以自动填充某一个区域。大多数的自动填充用于填充连续递增或者递减的值。我们可以设置递增的类型及方式。这些都通过XlAutoFillType 枚举类型来实现 (xlFillDays, xlFillFormats, xlFillSeries, xlFillWeekdays, xlGrowthTrend, xlFillCopy, xlFillDefault, xlFillMonths, xlFillValues, xlFillYears, or xlLinearTrend)。如果不设置自动填充类型，则默认为XlFillDefault，Excel会判断区域的数据类型采用默认的自动填充方式填充。下面的代码演示了如何自动填充区域。
 
-```
+```c#
 private void AutoFill()
 {
     Excel.Range rng = this.Application.get_Range("B1", Type.Missing);

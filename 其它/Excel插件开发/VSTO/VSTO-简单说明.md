@@ -21,7 +21,7 @@ Excel对象模型基本模拟了UI界面：
 
 ![](https://ws3.sinaimg.cn/large/006tKfTcly1fskyhdmgggj30tf0mjtcd.jpg)
 
-具体可参考：[《浅谈 Excel 对象模型.md》](www.baidu.com)
+具体可参考：[《浅谈 Excel 对象模型.md》](https://github.com/TangHanF/ProjectRecord/blob/master/其它/Excel插件开发/VSTO/浅谈%20Excel%20对象模型.md)
 
 --------
 
