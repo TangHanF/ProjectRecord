@@ -139,7 +139,7 @@ object[,] arr = rng.Value ;//返回一个二维数组
 
 ## 操作Range
 
-> 以下`Application.ActiveSheet` = `Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet`，即当前活动的表
+> 有关Range的操作基本是频率比较高的操作，像获取数据、设置数据、拷贝数据、粘贴数据等。
 
 获取ActiveSheet单元格A2的值有以下等等方式：
 

@@ -17,6 +17,12 @@ Excel对象模型基本模拟了UI界面：
 - 一个Workbook还可以包含很多Shapes对象。工作表中还可以包含一些图表，标记，注释，控件等，这些都是浮在Sheet页上的，这些统称为Shapes，其中我们接触的最多的是图表（Charts）。
 - 一个WorkSheet可以包含很多个Range对象。具体而言，一个工作表里面有很多个单元格，单元格范围用Range表示，Range可以使一个单元格，也可以使多个单元格。单元格都是嵌入到Sheet页中的。
 
+更详细地Excel的对象模型图，如下，图中灰色的部分存在于office.dll中所有Office应用程序中都存在的对象：
+
+![](https://ws3.sinaimg.cn/large/006tKfTcly1fskyhdmgggj30tf0mjtcd.jpg)
+
+具体可参考：[《浅谈 Excel 对象模型.md》](www.baidu.com)
+
 --------
 
 由于 Excel 文档中的数据已高度结构化，因此该对象模型是分层模型且非常简单。 Excel 提供数百个你可能需与之进行交互的对象，但你可以通过将重点放在非常小的一部分可用对象上来很好的开始了解对象模型。 这些对象包括以下四种：
