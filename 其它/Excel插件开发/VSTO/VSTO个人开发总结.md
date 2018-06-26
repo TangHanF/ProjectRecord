@@ -8,6 +8,103 @@
 
 [TOC]
 
+# 公共代码封装
+
+```C#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Office.Interop.Excel;
+/****************************************************************************
+*Copyright (c) 2018 Microsoft All Rights Reserved.
+*CLR 版本： 4.0.30319.42000
+*机器名称：GUOFUC62B
+*命名空间：ExcelAddIn_刷新插件.interfaces.impl
+*文 件 名：  VSTOCommon
+*唯一标识：6cdd46a5-c7de-47e0-874a-6f0d18fe405c
+*当前的用户域：GUOFUC62B
+*创 建 人：  GuoF
+*电子邮箱：guofu_gh@163.com
+*创建时间：2018/6/22 下午7:34:29
+*描述：
+*****************************************************************************/
+
+namespace ExcelAddIn_刷新插件.interfaces.impl
+{
+    public class VSTOCommon : VSTOInterface
+    {
+        private static VSTOCommon vSTOCommon;
+
+        /// <summary>
+        /// 获取VSTOCommon对象实例
+        /// </summary>
+        /// <returns></returns>
+        public static VSTOCommon Instance
+        {
+            get
+            {
+                if (vSTOCommon == null)
+                {
+                    vSTOCommon = new VSTOCommon();
+                }
+                return vSTOCommon;
+            }
+        }
+
+        /// <summary>
+        /// 获取Application对象
+        /// </summary>
+        /// <returns></returns>
+        public Application GetApplication => Globals.ThisAddIn.Application;
+
+        /// <summary>
+        /// 获取当前活动工作簿
+        /// </summary>
+        /// <returns></returns>
+        public Workbook GetCurrentActiveWorkbook => Globals.ThisAddIn.Application.ActiveWorkbook;
+
+        /// <summary>
+        /// 获取当前活动单元表
+        /// </summary>
+        /// <returns></returns>
+        public Worksheet GetCurrentActiveWorksheet => GetCurrentActiveWorkbook.ActiveSheet;
+
+        /// <summary>
+        /// 获取Range范围
+        /// </summary>
+        /// <param name="range">传入一个范围，例如："A1:B3"、"A1"</param>
+        /// <returns></returns>
+        public Range GetRange(string range) => GetApplication.Range[range];
+
+        /// <summary>
+        /// 获取Range范围
+        /// </summary>
+        /// <param name="rowIndex">行，例如:"A1"</param>
+        /// <param name="colIndex">列，例如:"B1"</param>
+        /// <returns></returns>
+        public Range GetRange(string rowIndex, string colIndex) => GetApplication.Range[rowIndex, colIndex];
+
+
+
+        /// <summary>
+        /// 获取所有工作表。返回Excel.sheets对象，其中Excel.sheets中的每一个成员都是一个Excel.Worksheet对象。因此一般多对Excel.sheets进行遍历操作
+        /// </summary>
+        /// <returns> </returns>
+        public Sheets GetWorksheets => GetApplication.Worksheets;
+
+        /// <summary>
+        /// 获取活动表中选择的区域。返回一个多维（二维）数组
+        /// </summary>
+        /// <returns></returns>
+        public Range GetSelectRange => GetApplication.Selection;
+
+    }
+}
+```
+
+
+
 # VSTO外接应用程序
 
 ## 当前激活的工作簿
@@ -75,13 +172,124 @@ rng = this.Application.Selection;//获得Excel所选区域
 
 二者其实就 Globals.ThisAddIn 的区别，即获取方式的不同。
 
+## 自动设置列宽
+
+> 自动调整列宽要保证单元格不能处于编辑状态，如果单元格处于编辑状态则会触发异常。
+>
+> EntireColumn的使用
+
+```C#
+private void button8_Click(object sender, RibbonControlEventArgs e)
+{
+    //选择区域自动调整列宽
+    Excel.Range range = VSTOCommon.Instance.GetSelectRange;
+    range.EntireColumn.AutoFit();
+
+    //设定指定区域自动调整列宽
+    Excel.Range range2 = VSTOCommon.Instance.GetRange("A1", "B3");
+    range2.EntireColumn.AutoFit();
+}
+```
+
+## 退出Excel单元的编辑状态
+
+> 思路：模拟发送ESC按键。
+>
+> 经过测试，Globals.ThisAddIn.Application.SendKeys(object keys,[object wait])这个接口不生效：
+>
+> Globals.ThisAddIn.Application.SendKeys("{ESC}",true);
+>
+> 并未等待按钮结束。后改为：System.Windows.Forms.SendKeys.SendWait("{ESC}") 即可。
+
+## 删除行
+
+```c#
+// 删除行
+Excel.Worksheet sheet = VSTOCommon.Instance.GetCurrentActiveWorksheet;
+//删除第二行
+Excel.Range sel_row_range = sheet.Rows["2", Type.Missing];
+//Excel.Range sel_row_range = sheet.Rows["2:2", Type.Missing];
+sel_row_range.Delete(Excel.XlDeleteShiftDirection.xlShiftUp);
+```
+
+## 删除列
+
+删除B列、C列：
+
+```c#
+Excel.Range range2 = VSTOCommon.Instance.GetRange("B:B,C:C");
+range2.Delete();
+```
+
+## 合并单元格
+
+> 合并单元的本质就是首先获取一个要进行合并的Range范围，然后执行Merge方法进行合并。
+
+```c#
+/// <summary>
+/// 合并单元格
+/// </summary>
+/// <param name="startRow">开始点，例如：A1</param>
+/// <param name="endCol">结束点，例如：C3</param>
+public void MergeCells(string startRow, string endCol)
+{
+    //本质上就是获取一个Range范围，然后执行Merge方法进行合并
+    Microsoft.Office.Interop.Excel.Range mergeRange = VSTOCommon.Instance.GetRange(startRow, endCol);
+    mergeRange.Merge(Type.Missing);
+}
+```
+
+调用：
+
+```
+VSTOCommon.Instance. MergeCells("A1","A3");//合并行
+VSTOCommon.Instance. MergeCells("A1","C3");//合并列
+```
+
+
+
 ## 获取所选区域数据
 
 结合以上代码：
 
+![](https://ws2.sinaimg.cn/large/006tKfTcly1fsnev91h0mj31f40ec3zz.jpg)
+
 ```c#
 object[,] arr = rng.Value ;//返回一个二维数组
 ```
+
+> ```
+> arr:
+> [1, 1]: "需求变更（新增）工作量统计表"
+> [1, 2]: null
+> [1, 3]: null
+> [1, 4]: null
+> [1, 5]: null
+> [1, 6]: null
+> [1, 7]: null
+> [1, 8]: null
+> [1, 9]: null
+> [2, 1]: "序号"
+> [2, 2]: "系统名称"
+> [2, 3]: "变更编号"
+> [2, 4]: "变更内容"
+> [2, 5]: "原合同10%工作量约定"
+> [2, 6]: "原合同10%工作量使用情况"
+> [2, 7]: "新增变更工作量（超出10%部分）"
+> [2, 8]: "分包价(单价*人月)"
+> [2, 9]: "总包价(分包价*116%)"
+> [3, 1]: 1
+> [3, 2]: "xxxxx"
+> [3, 3]: 1
+> [3, 4]: "xxxxxx"
+> [3, 5]: "xx0"
+> [3, 6]: "xx1"
+> [3, 7]: "xx2"
+> [3, 8]: "xx3"
+> [3, 9]: "xx4"
+> ```
+>
+> 可以把数组[1,1]理解为Excel的第一行第一列数据，[3,9]理解为Excel的第三行第九列数据....
 
 
 
@@ -216,14 +424,6 @@ range.Value="数据"
 
 
 
-
-
-
-
-
-
-
-
 ## 方法/属性
 
 ### Application
@@ -328,6 +528,8 @@ foreach (Excel.Worksheet sht in Globals.ThisAddIn.Application.Worksheets)
 ---------
 
 ##  事件
+
+其它部分事件参考：[《浅谈 Excel 对象模型.md》](https://github.com/TangHanF/ProjectRecord/blob/master/其它/Excel插件开发/VSTO/浅谈%20Excel%20对象模型.md)
 
 ### SheetSelectionChange事件
 

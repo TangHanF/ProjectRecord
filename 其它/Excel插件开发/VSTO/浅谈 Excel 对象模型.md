@@ -39,10 +39,10 @@
 | 属性                      | 类型                | 说明                                                         |
 | ------------------------- | ------------------- | ------------------------------------------------------------ |
 | Cursor                    | XlMousePointer 枚举 | 获取或者设置鼠标手势的形状                                   |
-| EditDirectlyInCell        | Boolean             | 获取或者设置是否可以直接在单元格里面对数据进行编辑，如果为false，则只能在公示栏中对数据进行编辑 |
+| EditDirectlyInCell        | Boolean             | 获取或者设置是否可以直接在单元格里面对数据进行编辑，如果为false，则只能在公示栏中对数据进行编辑。PS：如果单元格已经处于单元格内编辑状态，设置为false会触发异常 |
 | Interactive               | Boolean             | 获取或者设置用户是否可以通过鼠标或者键盘与Excel进行交互      |
 | MoveAfterReturnDirection  | xlDirection枚举     | 设置当用户敲回车时，在 MoveAfterReturn属性设置为true的情况下，下一个单元格移动的位置，默认为向下。 |
-| ScreenUpdating            | Boolean             | 设置屏幕刷新属性，当设置为True时，每一个单元格的刷新时都会刷新整个屏幕，一般地在编程时，为了提升速度，在代码处理的过程中禁止屏幕刷新，待数据填充完成之后，再开启屏幕刷新. |
+| **ScreenUpdating**        | **Boolean**         | **设置屏幕刷新属性，当设置为True时，每一个单元格的刷新时都会刷新整个屏幕，一般地在编程时，为了提升速度，在代码处理的过程中禁止屏幕刷新，待数据填充完成之后，再开启屏幕刷新.** |
 | StandardFont              | String              | 获取或者设置Excel中显示的默认字体，重启后生效。              |
 | StandardFontSize          | Long                | 获取或者设置Excel默认显示的字体大小，重启后生效。            |
 | StartupPath (read-only    | String              | 返回Excel外接插件启动项的加载目录.                           |
@@ -785,7 +785,7 @@ rngDown = rng.get_End(Excel.XlDirection.xlDown);
 
 - 自动填充 Range对象的AutoFill方法是的我们可以自动填充某一个区域。大多数的自动填充用于填充连续递增或者递减的值。我们可以设置递增的类型及方式。这些都通过XlAutoFillType 枚举类型来实现 (xlFillDays, xlFillFormats, xlFillSeries, xlFillWeekdays, xlGrowthTrend, xlFillCopy, xlFillDefault, xlFillMonths, xlFillValues, xlFillYears, or xlLinearTrend)。如果不设置自动填充类型，则默认为XlFillDefault，Excel会判断区域的数据类型采用默认的自动填充方式填充。下面的代码演示了如何自动填充区域。
 
-```c#
+```C#
 private void AutoFill()
 {
     Excel.Range rng = this.Application.get_Range("B1", Type.Missing);
