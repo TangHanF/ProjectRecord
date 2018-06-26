@@ -10,6 +10,8 @@
 
 # 公共代码封装
 
+> 本文档相关实例可以使用到了类似于：`VSTOCommon.Instance.xxx`的方法或者属性，这是我进行了一定封装，具体部分代码如下：
+
 ```C#
 using System;
 using System.Collections.Generic;
@@ -418,7 +420,9 @@ range.Value="数据"
 
 ## 将数据绑定到Excel单元格（赋值操作）
 
-> 2
+> 一开始比较迷茫一点可能是数据有了（数据来源可能是查询数据库得到、可能是读取文件得到等），问题是在填充数据可以使用xxx.Range.Value = "xxxxxx"实现，但是这个Range怎么确定呢?
+>
+> **两点定位法**，下面代码有详细说明
 
 ```c#
 string cmd = "select * from t_vipinfos";
@@ -463,6 +467,8 @@ range.Value = arr;
 - `sh.Cells[1, 1]`：获取A1到A1的单元格，即左上角第一个单元格，作为区域起点，返回一个Range区域（实际就是一个单元格而已）--区域1。
 - `sh.Cells[rowCount, colCount]`：以数据表的行、列总数作为获取Range区域的起始点，返回一个Range区域--区域2
 - `sh.Range[sh.Cells[1, 1], sh.Cells[rowCount, colCount]]`：通过区域1、区域2两点最终确定一个大区域，即要进行数据填充的区域。
+
+![](https://ws4.sinaimg.cn/large/006tNc79ly1fsop9bibpvj314o0kqdhk.jpg)
 
 --------
 
@@ -553,7 +559,11 @@ foreach (Excel.Worksheet sht in Globals.ThisAddIn.Application.Worksheets)
 
 #### 属性
 
+##### Cell属性
 
+> 单元格，返回一个Range对象。例如：
+>
+> Globals.ThisAddIn.Application.ActiveWorksheet.Cell[1,1] 获取左上角第一个单元格，即A1：A1单元格
 
 -------
 
