@@ -416,6 +416,54 @@ range.Value="数据"
 
 但是这样range区域就会被“数据填充”
 
+## 将数据绑定到Excel单元格（赋值操作）
+
+> 2
+
+```c#
+string cmd = "select * from t_vipinfos";
+//MySQLHelper.GetDataTable为我封装的数据库代码，大家可自行封装，只要返回一个DataTable对象即可。
+DataTable dt = MySQLHelper.GetDataTable(null, System.Data.CommandType.Text, cmd);
+
+//得到数据表中总行数
+int rowCount = dt.Rows.Count;
+//得到数据表中总列数
+int colCount = dt.Columns.Count;
+
+//根据总行数、总列数创建一个二维数据组来实现对Excel数据表的映射
+string[,] arr = new string[dt.Rows.Count, dt.Columns.Count];
+
+//遍历，赋值
+for (int i = 0; i < rowCount; i++)
+{
+    for (int j = 0; j < colCount; j++)
+    {
+        arr[i, j] = dt.Rows[i][j].ToString();
+    }
+}
+            
+
+//将数据绑定到Excel中
+//首先获取到当前活动工作表
+Excel.Worksheet sh = VSTOCommon.Instance.GetCurrentActiveWorksheet;
+//获取要赋值的区域。这一块我们下面重点说明一下
+Excel.Range range = sh.Range[sh.Cells[1, 1], sh.Cells[rowCount, colCount]];
+//未指定的区域进行赋值操作
+range.Value = arr;
+```
+
+现在需要对上述代码的
+
+`Excel.Range range = sh.Range[sh.Cells[1, 1], sh.Cells[rowCount, colCount]];`
+
+进行拆分说明：
+
+> 我们知道，通过Range可以确定一个范围（单元格、行、列等），例如xxx.Range("A1:B3")或者xxx.Range("A1","B3")可以表示获取单元格A1到单元格B3的区域。这一行代码就是基于这个原理。
+
+- `sh.Cells[1, 1]`：获取A1到A1的单元格，即左上角第一个单元格，作为区域起点，返回一个Range区域（实际就是一个单元格而已）--区域1。
+- `sh.Cells[rowCount, colCount]`：以数据表的行、列总数作为获取Range区域的起始点，返回一个Range区域--区域2
+- `sh.Range[sh.Cells[1, 1], sh.Cells[rowCount, colCount]]`：通过区域1、区域2两点最终确定一个大区域，即要进行数据填充的区域。
+
 --------
 
 
