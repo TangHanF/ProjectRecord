@@ -48,6 +48,26 @@
      ---- ....
 ```
 
+# 涉及内容
+
+> 截止目前，涉及的内容有：
+>
+> - Java
+> - JavaScript
+> - JQuery
+> - LayUI
+> - BootStrap
+> - AngularJS
+> - NodeJS
+> - Python
+> - Nginx
+> - Tomcat
+> - Weblogic
+> - 操作系统相关内容（Mac系统）
+> - …….....
+>
+> 希望有志者参与其中，共同完善....
+
 # 联系方式
 
 邮箱地址：guofu_gh@163.com
