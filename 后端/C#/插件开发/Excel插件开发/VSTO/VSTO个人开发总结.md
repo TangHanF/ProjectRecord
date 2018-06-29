@@ -365,7 +365,7 @@ var s = sht.Cells(1, 1)(2,1).Value;
 
 ​	由于C#是强类型的语言，变量必须声明类型，但单元格中的值却有文本、数字等，所以这里的变量s定义为var（也可为object）。可见，单元格的表示与VBA中相比，只是要在前面加点东西就成了，其余都一样，如下面的选择单元格：
 
-## 选择单元格（单个、多个、多列）
+### 选择单元格（单个、多个、多列）
 
 ```c#
 sht.Cells[2, 3].Select();//选择行2列3的单元格，即C2单元格
@@ -373,7 +373,7 @@ sht.Range["d3:J8"].Select();//选择D3开始，J8结尾的区域
 sht.Range["d:J"].Select();//选择D到J列
 ```
 
-## 复制粘贴单元格
+### 复制粘贴单元格
 
 ```c#
 sht.Range["d3:e3"].Copy(sht.Range["d6"]); //拷贝并粘贴。将D3：E3区域的数据拷贝到D6为起点的区域（自动扩充） 
@@ -387,7 +387,7 @@ sht.Range["h6:i6"].Select();
 sht.Paste();
 ```
 
-## 单元格区域写进数组、数组写回单元格
+### 单元格区域写进数组、数组写回单元格
 
 ```c#
 var  ar = sht.Range["d3:e3"].Value;
@@ -400,7 +400,7 @@ object[,] ar = sht.Range["d3:e3"].Value;
 sht.Range["d5:e5"].Value =ar;
 ```
 
-## 给Range区域赋值
+### 给Range区域赋值
 
 ```c#
 Excel.Range range = Globals.ThisAddIn.Application.Range["A1:B3"];
@@ -469,6 +469,24 @@ range.Value = arr;
 - `sh.Range[sh.Cells[1, 1], sh.Cells[rowCount, colCount]]`：通过区域1、区域2两点最终确定一个大区域，即要进行数据填充的区域。
 
 ![](https://ws4.sinaimg.cn/large/006tNc79ly1fsop9bibpvj314o0kqdhk.jpg)
+
+
+
+## 清空Excel表格
+
+```c#
+Excel.Worksheet sh = VSTOCommon.Instance.GetCurrentActiveWorksheet;
+
+int r=sh.Rows.Count;
+int c = sh.Columns.Count;
+
+Excel.Range tmpRange = sh.Range[sh.Cells[1, 1], sh.Cells[r, c]];
+tmpRange.Clear();
+```
+
+
+
+
 
 --------
 
@@ -561,9 +579,26 @@ foreach (Excel.Worksheet sht in Globals.ThisAddIn.Application.Worksheets)
 
 ##### Cell属性
 
-> 单元格，返回一个Range对象。例如：
+> **单元格，返回一个Range对象**。例如：
 >
 > Globals.ThisAddIn.Application.ActiveWorksheet.Cell[1,1] 获取左上角第一个单元格，即A1：A1单元格
+
+##### Rows属性
+
+> **获取行。返回Range对象。**
+>
+> 获取第一行：
+>
+> ```c#
+> Excel.Range sel_row_range1 = sheet.Rows["1:1", Type.Missing] ;
+> Excel.Range sel_row_range2 = sheet.Rows["1", Type.Missing] ;
+> ```
+>
+> 
+
+##### Columns属性
+
+> **获取列，返回Range对象**。
 
 -------
 
@@ -578,6 +613,16 @@ foreach (Excel.Worksheet sht in Globals.ThisAddIn.Application.Worksheets)
 > Range.Select();
 
 ![](https://ws3.sinaimg.cn/large/006tNc79ly1fsk2h8pix1j30bs09cdga.jpg)
+
+##### Merge 方法
+
+> 合并单元格。
+>
+> Range.Merge(Type.Missing) 
+
+##### Clear 方法
+
+> 清空表数据。
 
 #### 属性
 
