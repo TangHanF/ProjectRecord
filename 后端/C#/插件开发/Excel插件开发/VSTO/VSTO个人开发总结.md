@@ -418,6 +418,16 @@ range.Value="数据"
 
 但是这样range区域就会被“数据填充”
 
+### Range区域数据对齐
+
+`Microsoft.Office.Interop.Excel.XlHAlign`
+
+```c#
+range.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignRight;
+```
+
+
+
 ## 将数据绑定到Excel单元格（赋值操作）
 
 > 一开始比较迷茫一点可能是数据有了（数据来源可能是查询数据库得到、可能是读取文件得到等），问题是在填充数据可以使用xxx.Range.Value = "xxxxxx"实现，但是这个Range怎么确定呢?
