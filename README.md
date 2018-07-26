@@ -82,4 +82,18 @@
 
 ----
 
+# 题外话
+
+为了更加直观的显示本库的目录，便于各位深入了解，建议各位为自己的浏览器添加`GiteeTree`插件，插件下载地址：
+
+[点此直达下载](https://gitee.com/oschina/GitCodeTree)
+
+安装运行效果图：
+
+![](https://ws2.sinaimg.cn/large/006tKfTcly1ftn40zdkq5j30ui16aaim.jpg)
+
+> 此插件可以支持GitHub以及Gitee
+
+----
+
 **分享快乐，祝你快乐！！**
