@@ -56,7 +56,7 @@ var LayUIDataTable = (function () {
     var rowData = {};
     var $;
 
-    function checkJquery () {
+    function checkJquery() {
         if (!$) {
             console.log("未获取jquery对象，请检查是否在调用ConvertDataTable方法之前调用SetJqueryObj进行设置！")
             return false;
@@ -64,29 +64,114 @@ var LayUIDataTable = (function () {
     }
 
     /**
-     * 转换数据表格。
+     * 转换表格，处理事件等
+     * @param isdblClick 是否是双击触发事件
      * @param callback 双击行的回调函数，该回调函数返回三个参数，分别为：当前点击行的索引值、当前点击单元格的值、当前行数据
-     * @returns {Array} 返回当前数据表当前页的所有行数据。数据结构：<br/>
+     * @returns {*} 返回当前表格的所有行数据对象集合。数据结构：<br/>
      * [
      *      {字段名称1:{value:"当前字段值",cell:"当前字段所在单元格td对象",row:"当前字段所在行tr对象"}}
      *     ,{字段名称2:{value:"",cell:"",row:""}}
      * ]
      * @constructor
      */
-    function ConvertDataTable (callback) {
+    function ConvertDataTable(callback) {
+        var isdblClick = true;//TODO ....
+        var isExistFixColFlag = IsExistFiexColumn();
         if (!checkJquery()) return;
         var dataList = [];
-        var rowData = {};
-        var trArr = $(".layui-table-body.layui-table-main tr");// 行数据
+        var trArr = GetTr();
+        var trArrFiex = GetFiexColumnArr();
+
+
         if (!trArr || trArr.length == 0) {
             console.log("未获取到相关行数据，请检查数据表格是否渲染完毕！");
             return;
         }
+
+        EachRowDealData(trArr, dataList, isdblClick, callback);
+
+        if (isExistFixColFlag) {
+            EachRowDealData(trArrFiex, dataList, isdblClick, callback);
+        }
+
+        return dataList;
+    }
+
+    /**
+     * 判断是否存在固定列
+     * @returns {boolean}
+     * @constructor
+     */
+    function IsExistFiexColumn() {
+        if ($(".layui-table-fixed.layui-table-fixed-l").length > 0 || $(".layui-table-fixed.layui-table-fixed-r").length > 0)
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * 获取行数据
+     * @returns {*|jQuery|HTMLElement}
+     * @constructor
+     */
+    function GetTr() {
+        var trArr = $(".layui-table-body.layui-table-main tr");// 行数据
+        return trArr;
+    }
+
+    /**
+     * 获取固定列所属行的集合
+     * @returns {*}
+     * @constructor
+     */
+    function GetFiexColumnArr() {
+        var trArr = [];
+        var trArrTmp = [];
+        if (IsExistFiexColumn) {
+            if ($(".layui-table-fixed.layui-table-fixed-l").length > 0)
+                trArr = $(".layui-table-fixed.layui-table-fixed-l tr");
+            if ($(".layui-table-fixed.layui-table-fixed-r").length > 0) {
+                trArrTmp = $(".layui-table-fixed.layui-table-fixed-r tr");
+                //TODO 有优化空间
+                $.each(trArrTmp, function (index, value) {
+                    trArr.push(value);
+                })
+            }
+            return trArr
+
+        }
+        else return null;
+    }
+
+    /**
+     * 遍历每行并处理每一行处理，将其封装于对象中
+     * @param trArr
+     * @param dataList 返回数据集合对象（引用类型）
+     * @param callback 回调
+     * @returns {*}
+     * @constructor
+     */
+    function EachRowDealData(trArr, dataList, isdblClick, callback) {
+        if (!trArr) return;
+
+        //TODO 有优化空间
         $.each(trArr, function (index, trObj) {
             var currentClickRowIndex;
             var currentClickCellValue;
 
-            $(trObj).dblclick(function (e) {
+            if (isdblClick) {
+                $(trObj).dblclick(function (e) {
+                    _click(e);
+
+                });
+            } else {
+                $(trObj).click(function (e) {
+                    _click(e);
+                });
+
+            }
+
+            function _click(e) {
                 var returnData = {};
                 var currentClickRow = $(e.currentTarget);
                 currentClickRowIndex = currentClickRow.data("index");
@@ -94,24 +179,36 @@ var LayUIDataTable = (function () {
                 $.each(dataList[currentClickRowIndex], function (key, obj) {
                     returnData[key] = obj.value;
                 });
+                e.cancelBubble=true;
+                // layui.stope(e)
                 callback(currentClickRowIndex, currentClickCellValue, returnData);
-            });
+            }
+
             var tdArrObj = $(trObj).find('td');
             rowData = {};
             //  每行的单元格数据
             $.each(tdArrObj, function (index_1, tdObj) {
                 var td_field = $(tdObj).data("field");
-                rowData[td_field] = {};
-                rowData[td_field]["value"] = $($(tdObj).html()).html();
-                rowData[td_field]["cell"] = $(tdObj);
-                rowData[td_field]["row"] = $(trObj);
-
+                if ($($(tdObj).find("div.layui-form-checkbox")).length > 0) {
+                    rowData["checkbox"] = rowData["checkbox"] || {};
+                    rowData["checkbox"]["checkbox"] = ($($(tdObj).find("div.layui-form-checkbox")).length > 0 ? $($(tdObj).find("div.layui-form-checkbox")) : undefined);
+                } else {
+                    rowData[td_field] = rowData[td_field] || {};
+                    rowData[td_field]["value"] = $($(tdObj).html()).html();
+                    rowData[td_field]["cell"] = $(tdObj);
+                    rowData[td_field]["row"] = $(trObj);
+                }
+                //$($(tdObj).find("div.layui-form-checkbox")).addClass("layui-form-checked")//选中
+                //$($(tdObj).find("div.layui-form-checkbox")).hide()//隐藏
+                //$($(tdObj).find("div.layui-form-checkbox")).show()//显示
             })
             dataList.push(rowData);
         })
         return dataList;
     }
 
+
+    // 暴露对外访问的接口
     return {
         /**
          * 设置JQuery对象，第一步操作。如果你没有在head标签里面引入jquery且未执行该方法的话，ParseDataTable方法、HideField方法会无法执行，出现找不到 $ 的错误。如果你是使用LayUI内置的Jquery，可以
@@ -147,6 +244,15 @@ var LayUIDataTable = (function () {
         }
     }
 })();
+
+/*
+* 2018年08月01日：
+*   1、修复对于有固定列的表格双击无法获取固定列行数据的BUG
+*   2、修改对于有固定列的表格双击固定列事件无效BUG
+*   3、优化:优化左右固定列双击事件处理
+*
+*
+* */
 ```
 
 - **调用**
@@ -278,3 +384,27 @@ table.on('sort(demo)', function(obj){
 });
 ```
 
+## 排序后不生效问题
+
+排序之后双击行事件无效，解决方案如下：
+
+> 在排序事件table.on(sort(xxx))里面重新执行:LayUIDataTable.ParseDataTable方法
+
+```javascript
+table.on('sort(demo)', function (obj) {
+    debugger
+    $("[data-field='id']").css('display', 'none');
+    LayUIDataTable.SetJqueryObj($);// 第一步：设置jQuery对象
+    // LayUIDataTable.HideField(['num','match_guest']);// 隐藏列-多列模式
+    var currentRowDataList = LayUIDataTable.ParseDataTable(function (index, currentData, rowData) {
+        console.log("当前页数据条数:" + currentRowDataList.length)
+        console.log("当前行索引：" + index);
+        console.log("触发的当前行单元格：" + currentData);
+        console.log("当前行数据：" + JSON.stringify(rowData));
+        var msg = '<div style="text-align: left"> 【当前页数据条数】' + currentRowDataList.length + '<br/>【当前行索引】' + index + '<br/>【触发的当前行单元格】' + currentData + '<br/>【当前行数据】' + JSON.stringify(rowData) + '</div>';
+        layer.msg(msg)
+    })
+});
+```
+
+> 上述事件里面的逻辑可封装为方法，便于调用，请自行封装即可。
