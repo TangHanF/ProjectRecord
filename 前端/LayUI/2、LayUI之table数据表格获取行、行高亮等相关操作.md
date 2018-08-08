@@ -98,16 +98,41 @@ var LayUIDataTable = (function () {
     }
 
     /**
-     * 判断是否存在固定列
+     * 判断是否存在固定列（左侧固定或者右侧固定任意一个出现即可）
      * @returns {boolean}
      * @constructor
      */
     function IsExistFiexColumn() {
-        if ($(".layui-table-fixed.layui-table-fixed-l").length > 0 || $(".layui-table-fixed.layui-table-fixed-r").length > 0)
+        if (IsExistFiexColumnL() || IsExistFiexColumnR())
             return true;
         else
             return false;
     }
+
+    /**
+     * 是否存在左侧固定列
+     * @returns {boolean}
+     * @constructor
+     */
+    function IsExistFiexColumnL() {
+        if ($(".layui-table-fixed.layui-table-fixed-l").length > 0)
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * 是否存在右侧固定列
+     * @returns {boolean}
+     * @constructor
+     */
+    function IsExistFiexColumnR() {
+        if ($(".layui-table-fixed.layui-table-fixed-r").length > 0)
+            return true;
+        else
+            return false;
+    }
+
 
     /**
      * 获取行数据
@@ -143,6 +168,7 @@ var LayUIDataTable = (function () {
         else return null;
     }
 
+
     /**
      * 遍历每行并处理每一行处理，将其封装于对象中
      * @param trArr
@@ -154,6 +180,8 @@ var LayUIDataTable = (function () {
     function EachRowDealData(trArr, dataList, isdblClick, callback) {
         if (!trArr) return;
 
+        var fixedCol;
+        var indexFixedColumn = 0;
         //TODO 有优化空间
         $.each(trArr, function (index, trObj) {
             var currentClickRowIndex;
@@ -179,19 +207,33 @@ var LayUIDataTable = (function () {
                 $.each(dataList[currentClickRowIndex], function (key, obj) {
                     returnData[key] = obj.value;
                 });
-                e.cancelBubble=true;
+                e.cancelBubble = true;
                 // layui.stope(e)
                 callback(currentClickRowIndex, currentClickCellValue, returnData);
             }
 
             var tdArrObj = $(trObj).find('td');
             rowData = {};
+
             //  每行的单元格数据
             $.each(tdArrObj, function (index_1, tdObj) {
                 var td_field = $(tdObj).data("field");
                 if ($($(tdObj).find("div.layui-form-checkbox")).length > 0) {
                     rowData["checkbox"] = rowData["checkbox"] || {};
+                    // rowData["fixedColumn"] = rowData["fixedColumn"] || {};
+
                     rowData["checkbox"]["checkbox"] = ($($(tdObj).find("div.layui-form-checkbox")).length > 0 ? $($(tdObj).find("div.layui-form-checkbox")) : undefined);
+                    if (IsExistFiexColumn()) {
+                        debugger
+                        if (!fixedCol)
+                            fixedCol = GetFiexColumnArr();
+                        if (IsExistFiexColumnL())
+                            rowData["fixedColumn_L"] = $(fixedCol[indexFixedColumn + 1]);
+                        if (IsExistFiexColumnR()) {
+                            rowData["fixedColumn_R"] = $(fixedCol[fixedCol.length / 2 + indexFixedColumn + 1]);
+                        }
+                        indexFixedColumn++;
+                    }
                 } else {
                     rowData[td_field] = rowData[td_field] || {};
                     rowData[td_field]["value"] = $($(tdObj).html()).html();
@@ -242,15 +284,34 @@ var LayUIDataTable = (function () {
 
             }
         }
+
+        /**
+         * 存在固定列的行高亮显示。对于普通行还是使用：obj['score']["row"].css("background-color", "#FAB000");形式即可
+         * @param rowObj 调用LayUIDataTable.ParseDataTable返回的行集合的某一项（即：行对象）。
+         * @param bgColor 背景颜色值。格式："red"或者"#ff0000"
+         * @constructor
+         */
+        , DealFixedRowHighLight: function (rowObj, bgColor) {
+            if (IsExistFiexColumnL())
+            //左侧固定列高亮
+                $(rowObj["fixedColumn_L"]).css("background-color", bgColor);
+            if (IsExistFiexColumnR())
+            // 右侧固定列高亮
+                $(rowObj["fixedColumn_R"]).css("background-color", bgColor);
+        }
     }
 })();
 
 /*
 * 2018年08月01日：
+* 感谢：（微信：qq86****11反馈）
 *   1、修复对于有固定列的表格双击无法获取固定列行数据的BUG
 *   2、修改对于有固定列的表格双击固定列事件无效BUG
 *   3、优化:优化左右固定列双击事件处理
 *
+* 2018年08月08日：
+* 感谢：（微信：hip-****-Noah反馈）
+*   1、修复存在固定列时固定列无法高亮显示问题
 *
 * */
 ```
@@ -300,6 +361,9 @@ var LayUIDataTable = (function () {
 
                         $(".layui-table th").css("font-weight", "bold");// 设定表格标题字体加粗
 
+                        
+                        
+                        
                         LayUIDataTable.SetJqueryObj($);// 第一步：设置jQuery对象
 
                         //LayUIDataTable.HideField('num');// 隐藏列-单列模式
@@ -323,6 +387,8 @@ var LayUIDataTable = (function () {
                             if (obj['num'] && obj['num'].value > 30) {
                                 obj['num']["row"].css("background-color", "#FAB000");// 对行（row）进行高亮显示
                                 obj["num"]["cell"].css("font-weight","bold");// 对单元格（cell）字体进行加粗显示
+                                //固定列的高亮显示
+                                 LayUIDataTable.DealFixedRowHighLight(obj,"red")
                             }
                         })
                     }// end done
@@ -330,6 +396,7 @@ var LayUIDataTable = (function () {
 
                 });//end table.render
 
+                //以下为测试代码
                 function dealLighthigh (rowIndexArr, bgColor) {
                     $.each(rowIndexArr, function (index, val) {
                         if (typeof val == "number") {
@@ -384,11 +451,15 @@ table.on('sort(demo)', function(obj){
 });
 ```
 
+## 图四：固定列高亮显示
+
+![](https://ws2.sinaimg.cn/large/0069RVTdly1fu2k99d5zaj31e60iyq66.jpg)
+
 ## 排序后不生效问题
 
 排序之后双击行事件无效，解决方案如下：
 
-> 在排序事件table.on(sort(xxx))里面重新执行:LayUIDataTable.ParseDataTable方法
+> 在排序事件**table.on(sort(xxx))**排序事件里面重新执行:LayUIDataTable.ParseDataTable方法
 
 ```javascript
 table.on('sort(demo)', function (obj) {
