@@ -52,9 +52,16 @@ table.render({
 
 新建JavaScript文件，例如新建一个`DataTableExtend.js`的文件，代码如下：
 ``` javascript
-var LayUIDataTable = (function () {
-    var rowData = {};
-    var $;
+let LayUIDataTable = (function () {
+    let rowData = {};
+    let $;
+
+    //配置项
+    let LayUIDataTableConfig={
+        isdblClick:true,// 是否支持行、单元格的双击事件（默认true）,如果为"false"，则默认只支持单击事件
+        fixedColumnDBClick:true,// 固定列的标题是否可以触发双击（受限于"isdblClick"配置项是否开启，若"isdblClick"配置为false，则无意义）
+
+    };
 
     function checkJquery() {
         if (!$) {
@@ -65,7 +72,6 @@ var LayUIDataTable = (function () {
 
     /**
      * 转换表格，处理事件等
-     * @param isdblClick 是否是双击触发事件
      * @param callback 双击行的回调函数，该回调函数返回三个参数，分别为：当前点击行的索引值、当前点击单元格的值、当前行数据
      * @returns {*} 返回当前表格的所有行数据对象集合。数据结构：<br/>
      * [
@@ -75,25 +81,22 @@ var LayUIDataTable = (function () {
      * @constructor
      */
     function ConvertDataTable(callback) {
-        var isdblClick = true;//TODO ....
-        var isExistFixColFlag = IsExistFiexColumn();
+        let isExistFixColFlag = IsExistFiexColumn();
         if (!checkJquery()) return;
-        var dataList = [];
-        var trArr = GetTr();
-        var trArrFiex = GetFiexColumnArr();
-
+        let dataList = [];
+        let trArr = GetTr();
+        let trArrFiex = GetFiexColumnArr();
 
         if (!trArr || trArr.length == 0) {
             console.log("未获取到相关行数据，请检查数据表格是否渲染完毕！");
             return;
         }
 
-        EachRowDealData(trArr, dataList, isdblClick, callback);
+        EachRowDealData(trArr, dataList, LayUIDataTableConfig.isdblClick, callback);
 
         if (isExistFixColFlag) {
-            EachRowDealData(trArrFiex, dataList, isdblClick, callback);
+            EachRowDealData(trArrFiex, dataList, LayUIDataTableConfig.isdblClick, callback);
         }
-
         return dataList;
     }
 
@@ -140,7 +143,7 @@ var LayUIDataTable = (function () {
      * @constructor
      */
     function GetTr() {
-        var trArr = $(".layui-table-body.layui-table-main tr");// 行数据
+        let trArr = $(".layui-table-body.layui-table-main tr");// 行数据
         return trArr;
     }
 
@@ -150,8 +153,8 @@ var LayUIDataTable = (function () {
      * @constructor
      */
     function GetFiexColumnArr() {
-        var trArr = [];
-        var trArrTmp = [];
+        let trArr = [];
+        let trArrTmp = [];
         if (IsExistFiexColumn) {
             if ($(".layui-table-fixed.layui-table-fixed-l").length > 0)
                 trArr = $(".layui-table-fixed.layui-table-fixed-l tr");
@@ -180,28 +183,33 @@ var LayUIDataTable = (function () {
     function EachRowDealData(trArr, dataList, isdblClick, callback) {
         if (!trArr) return;
 
-        var fixedCol;
-        var indexFixedColumn = 0;
+        let fixedCol;
+        let indexFixedColumn = 0;
         //TODO 有优化空间
         $.each(trArr, function (index, trObj) {
-            var currentClickRowIndex;
-            var currentClickCellValue;
+            let currentClickRowIndex;
+            let currentClickCellValue;
 
             if (isdblClick) {
                 $(trObj).dblclick(function (e) {
-                    _click(e);
+                    if(LayUIDataTableConfig.fixedColumnDBClick){
+                        _click(e);
+                    }
+                    // 排除固定列标题行的点击事件
+                    // let dataIndex = e.currentTarget.dataset.index;//如果是固定列的行标题，那么没有"data-index"属性，通过这一点进行判断
+                    // if (dataIndex)
+                    //     _click(e);
 
                 });
             } else {
                 $(trObj).click(function (e) {
                     _click(e);
                 });
-
             }
 
             function _click(e) {
-                var returnData = {};
-                var currentClickRow = $(e.currentTarget);
+                let returnData = {};
+                let currentClickRow = $(e.currentTarget);
                 currentClickRowIndex = currentClickRow.data("index");
                 currentClickCellValue = e.target.innerHTML
                 $.each(dataList[currentClickRowIndex], function (key, obj) {
@@ -212,19 +220,18 @@ var LayUIDataTable = (function () {
                 callback(currentClickRowIndex, currentClickCellValue, returnData);
             }
 
-            var tdArrObj = $(trObj).find('td');
+            let tdArrObj = $(trObj).find('td');
             rowData = {};
 
             //  每行的单元格数据
             $.each(tdArrObj, function (index_1, tdObj) {
-                var td_field = $(tdObj).data("field");
+                let td_field = $(tdObj).data("field");
                 if ($($(tdObj).find("div.layui-form-checkbox")).length > 0) {
                     rowData["checkbox"] = rowData["checkbox"] || {};
                     // rowData["fixedColumn"] = rowData["fixedColumn"] || {};
 
                     rowData["checkbox"]["checkbox"] = ($($(tdObj).find("div.layui-form-checkbox")).length > 0 ? $($(tdObj).find("div.layui-form-checkbox")) : undefined);
                     if (IsExistFiexColumn()) {
-                        debugger
                         if (!fixedCol)
                             fixedCol = GetFiexColumnArr();
                         if (IsExistFiexColumnL())
@@ -253,8 +260,16 @@ var LayUIDataTable = (function () {
     // 暴露对外访问的接口
     return {
         /**
+         * 设置配置对象
+         *
+         * @constructor
+         */
+        Config:function(config){
+            LayUIDataTableConfig=config;
+        },
+        /**
          * 设置JQuery对象，第一步操作。如果你没有在head标签里面引入jquery且未执行该方法的话，ParseDataTable方法、HideField方法会无法执行，出现找不到 $ 的错误。如果你是使用LayUI内置的Jquery，可以
-         * var $ = layui.jquery   然后把 $ 传入该方法
+         * let $ = layui.jquery   然后把 $ 传入该方法
          * @param jqueryObj
          * @constructor
          */
@@ -313,6 +328,10 @@ var LayUIDataTable = (function () {
 * 感谢：（微信：hip-****-Noah反馈）
 *   1、修复存在固定列时固定列无法高亮显示问题
 *
+* 2018年09月27日：
+* 感谢：（微信：hip-****-Noah反馈）
+*   1、提出双击固定列的标题头也能触发双击事件的问题，现已修复（固定列的标题头取消双击事件）
+*
 * */
 ```
 
@@ -363,7 +382,7 @@ var LayUIDataTable = (function () {
 
                         
                         
-                        
+                        // LayUIDataTable.Config({isdblClick: true,fixedColumnDBClick: false});
                         LayUIDataTable.SetJqueryObj($);// 第一步：设置jQuery对象
 
                         //LayUIDataTable.HideField('num');// 隐藏列-单列模式
