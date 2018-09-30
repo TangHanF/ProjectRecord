@@ -22,7 +22,7 @@
 
 ----------
 # HTML
-首先在body里面插入以下一段html:
+首先在body里面适当位置处插入以下一段html:
 ``` html
     <ul class="rightmenu">
         <li data-type="closethis">关闭当前</li>
@@ -40,10 +40,17 @@
 
 # JS
 
+请在适当位置加入以下代码：
+
 ``` javascript
+//屏蔽Tab选项卡的右键
+$('.layui-tab-title li').on('contextmenu', function () {
+    return false;
+})
+
 /**
-    * 注册tab右键菜单点击事件
-    */
+* 注册tab右键菜单点击事件
+*/
 $(".rightmenu li").click(function () {
     var currentActiveTabID = $("li[class='layui-this']").attr('lay-id');// 获取当前激活的选项卡ID
     var tabtitle = $(".layui-tab-title li");
@@ -53,7 +60,7 @@ $(".rightmenu li").click(function () {
     })
 
     switch ($(this).attr("data-type")) {
-        case "closethis"://关闭当前，如果开始了tab可关闭，实际意义不大
+        case "closethis"://关闭当前，如果开启了tab可关闭，实际意义不大
             tabDelete(currentActiveTabID);
             break;
         case "closeall"://关闭所有
@@ -85,7 +92,9 @@ $(".rightmenu li").click(function () {
     $('.rightmenu').hide();
 })
 
-
+/*
+*重新加载iFrame，实现更新
+*/
 function refreshiFrame() {
     var $curFrame = $('iframe:visible');
     $curFrame.attr("src",$curFrame.attr("src"));
@@ -105,6 +114,41 @@ tabDeleteAll = function (ids) {
 }
 ```
 
+> 注意：
+>
+> - 以上的“element”为LayUI的“element”模块，引入：
+>
+> ```javascript
+> layui.use(["element"],function(){
+> 	var element = layui.element;
+> 	// .....
+> })
+> ```
+>
+>
+>
+> - “你的Tab选项卡ID”：是指你在页面添加的LayUI的选项卡指定的“lay-filter”，例如：
+>
+> ```html
+> <!-- 内容主体区域 -->
+> <div class="layui-body">
+>     <!-- 顶部切换卡 -->
+>     <div class="layui-tab " lay-filter="main-tab" lay-allowClose="true">
+>         <div class="layui-tab-tool open" title="收起">
+>             <i class="wdfont wdicon-xiangzuojiantou"></i>
+>         </div>
+>         <ul class="layui-tab-title" style="z-index: 999;">
+>             <li lay-id="0" class="layui-this"><i class="wdfont wdicon-shouye"></i>首页</li>
+>         </ul>
+>         <div class="layui-tab-content">
+>             <div class="layui-tab-item layui-show">
+>                 <iframe id="0" src="desktop.html" class="layui-tab-iframe"></iframe>
+>             </div>
+>         </div>
+>     </div>
+> </div>
+> ```
+
 --------------------
 
 ``` javascript
@@ -117,7 +161,7 @@ $(document).click(function () {
 
 ``` javascript
 /**
-* 绑定右键菜单
+* 注册并绑定右键菜单
 * @constructor
 */
 function CustomRightClick () {
@@ -137,6 +181,8 @@ function CustomRightClick () {
     });
 }
 ```
+
+> CustomRightClick()方法实现在右键时弹出菜单，方法的具体调用位置请根据实际情况确定，例如在页面渲染完成之后调用该方法。
 
 -------
 # CSS样式
