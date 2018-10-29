@@ -51,7 +51,7 @@ PCRE 作用是让 Nginx 支持 Rewrite 功能。
 [root@bogon src]# wget http://nginx.org/download/nginx-1.6.2.tar.gz
 ```
 
-![img](assets/nginx3.png)2、解压安装包
+![img](https://ws3.sinaimg.cn/large/006tNbRwly1fwphcb11lsj30li025glk.jpg)2、解压安装包
 
 ```
 [root@bogon src]# tar zxvf nginx-1.6.2.tar.gz
