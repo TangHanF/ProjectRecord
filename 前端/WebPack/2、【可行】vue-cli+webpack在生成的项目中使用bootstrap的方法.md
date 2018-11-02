@@ -8,8 +8,6 @@
 
 在出现的各提示选项中（这些选项都随意）。
 
-[![复制代码](https://ws4.sinaimg.cn/large/006tNbRwly1fwtkc3qsdag300k00k07b.gif)]( "复制代码")
-
     ? Project name vuestrap
     ? Project description A Vue.js project
     ? Author SmileHong0121 <fengqingyuhou@gmail.com>
@@ -19,8 +17,6 @@
     ? Pick an ESLint preset Standard
     ? Setup unit tests with Karma + Mocha? No
     ? Setup e2e tests with Nightwatch? No
-
-[![复制代码](https://ws4.sinaimg.cn/large/006tNbRwly1fwtkc3qsdag300k00k07b.gif)]( "复制代码")
 
 选项选完，项目也就生成了，执行命令，安装脚手架创建的组件
 
