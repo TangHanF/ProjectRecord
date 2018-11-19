@@ -13,7 +13,7 @@
 - Spring提供了一个IoC容器用来初始化对象，解决对象间的依赖和对象的使用
 - Spring是模块化的，因此可以按需使用相应的模块
 
-Spring框架四大原则：
+**Spring框架四大原则：**
 
 > 1）使用POJO[^2]进行轻量级和最小侵入式开发
 >
@@ -50,16 +50,17 @@ Spring框架四大原则：
 
 ### @Configuration
 
-声明注解类是一个配置类
+> 声明注解类是一个配置类
 
 ### @ComponentScan
 
-自动扫面包下面的使用@Service、@Component、@Repository、@Controller注解的类并注册为Bean。（通常和@Configuration一起使用）
+> 自动扫面包下面的使用@Service、@Component、@Repository、@Controller注解的类并注册为Bean。（通常和@Configuration一起使用）
 
 ---------
 
 - `Java配置`是Spring4.x推荐的配置方式，完全可以代替xml配置，同时也是Spring Boot推荐的配置
   - Java配置通过`@Configuration`[^4]和`@Bean`[^5]实现的
+  - Java配置与`注解配置`的使用原则：`全局配置使用Java配置（如数据库、MVC相关配置），业务Bean的配置使用注解配置（@Component、@Service、@Repository、@Controller）`
 
 ### @ConfigurationProperties
 

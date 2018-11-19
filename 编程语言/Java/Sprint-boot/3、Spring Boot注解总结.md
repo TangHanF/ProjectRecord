@@ -8,6 +8,14 @@
 
 ------------
 
+[TOC]
+
+
+
+------
+
+
+
 # @RestController
 
 > @RestController表示controller里面的方法都以json格式输出，不用再写什么jackjson配置的了！
@@ -88,17 +96,35 @@ public class HelloWorldController {
 >
 > 表示该方法的返回结果直接写入 HTTP response body 中。一般在异步获取数据时使用，在使用`@RequestMapping` 后，返回值通常解析为跳转路径，加上 `@ResponseBody` 后返回结果不会被解析为跳转路径，而是直接写入 HTTP response body 中。比如异步获取 json 数据，**加上 `@ResponseBody` 后，会直接返回 json 数据**
 
+------
 
+以下四个顺次注解都是声明Bean对象的（功能是等效的，只是含义不一样而已）：
 
-# @Repository
+# @Component
 
-> 用于标注数据访问组件，即 DAO 组件。
+> 泛指组件，当组件不好归类的时候，我们可以使用这个注解进行标注。
+
+# @Controller
+
+>在展现层使用。
 
 # @Service
 
 > 用于标注业务层组件。
 
+# @Repository
 
+> 用于标注数据访问组件，即 DAO 组件。
+
+----------
+
+# @ComponentScan
+
+> 组件扫描。
+>
+> - 相当于自动扫描指定包下面所有使用 `@Component` `@Controller` `@Service`、`Respository` 等注解的类，并把这些类注册为 Bean。
+
+---------
 
 # @Configuration
 
@@ -106,7 +132,7 @@ public class HelloWorldController {
 >
 > 参考：[@Configuration和@Bean的用法和理解](https://blog.csdn.net/u012260707/article/details/52021265)
 
-### 自定义Filter
+## 自定义Filter
 
 我们常常在项目中会使用filters用于录调用日志、排除有XSS威胁的字符、执行权限验证等等。Spring Boot自动添加了OrderedCharacterEncodingFilter和HiddenHttpMethodFilter，并且我们可以自定义Filter。
 
@@ -162,9 +188,10 @@ public class WebConfiguration {
 
 # @Bean
 
-> 相当于 XML 中的,**放在方法的上面，而不是类**，意思是产生一个 bean, 并交给 spring 管理。
+> - 相当于 XML 中的,**放在方法的上面，而不是类**，意思是产生一个 bean, 并交给 spring 管理。
 >
-> @Bean是一个**方法级别**上的注解，[主要用在@Configuration注解的类里](mailto:%E4%B8%BB%E8%A6%81%E7%94%A8%E5%9C%A8@configuration%E6%B3%A8%E8%A7%A3%E7%9A%84%E7%B1%BB%E9%87%8C)，[也可以用在@Component注解的类里](mailto:%E4%B9%9F%E5%8F%AF%E4%BB%A5%E7%94%A8%E5%9C%A8@component%E6%B3%A8%E8%A7%A3%E7%9A%84%E7%B1%BB%E9%87%8C)。添加的bean的id为方法名
+> - @Bean是一个**方法级别**上的注解，[主要用在@Configuration注解的类里](mailto:%E4%B8%BB%E8%A6%81%E7%94%A8%E5%9C%A8@configuration%E6%B3%A8%E8%A7%A3%E7%9A%84%E7%B1%BB%E9%87%8C)，[也可以用在@Component注解的类里](mailto:%E4%B9%9F%E5%8F%AF%E4%BB%A5%E7%94%A8%E5%9C%A8@component%E6%B3%A8%E8%A7%A3%E7%9A%84%E7%B1%BB%E9%87%8C)。
+> - 该Bean的名称（ID）是该被注解的方法名。
 
 配置一个Bean：
 
@@ -185,14 +212,16 @@ public class AppConfig {
     <bean id="transferService" class="com.acme.TransferServiceImpl"/>
 </beans>
 ```
+# @Configuration
 
-# @Component
+> - 指出该类是 Bean 配置的信息源，相当于 XML 中的，一般加在主类上。
+>
+> - 标识该类是配置类。
+>
+> - 表名该类有0个或者多个@Bean注解。
 
-> 泛指组件，当组件不好归类的时候，我们可以使用这个注解进行标注。
 
-# @ComponentScan
 
-> 组件扫描。相当于如果扫描到有 `@Component` `@Controller` `@Service` 等这些注解的类，则把这些类注册为 bean。
 
 # @PersistenceContext
 
@@ -200,9 +229,6 @@ public class AppConfig {
 
 
 
-# @Configuration
-
-> 指出该类是 Bean 配置的信息源，相当于 XML 中的，一般加在主类上。
 
 # @Scope
 
