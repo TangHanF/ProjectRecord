@@ -8,23 +8,23 @@
 
 # 1. 新建Spring Initializr 项目
 
-![img](assets/1240732-20171210185304130-1613507897.png)
+![img](https://ws2.sinaimg.cn/large/006tNc79ly1fyulie92upj30kd0gjdhy.jpg)
 
 # 2. 填写项目信息
 
-![img](assets/1240732-20171210185455021-2123052165.png)
+![img](https://ws3.sinaimg.cn/large/006tNc79ly1fyulib59dwj30kd0gjta9.jpg)
 
 # 3. 选择项目使用的技术
 
-![img](assets/1240732-20171210185604036-1671118057.png)
+![img](https://ws1.sinaimg.cn/large/006tNc79ly1fyuliiwkaej30n70gjaci.jpg)
 
 # 4. 填写项目名称
 
-![img](assets/1240732-20171210185652505-1527919520.png)
+![img](https://ws3.sinaimg.cn/large/006tNc79ly1fyulin366kj30n70gj75t.jpg)
 
 # 5. 项目架构及依赖
 
-![img](assets/1240732-20171210190507802-1074917446.png)
+![img](https://ws1.sinaimg.cn/large/006tNc79ly1fyuliqbsabj30bs0fn754.jpg)
 
 # 6. 添加测试控制器
 
@@ -58,11 +58,11 @@ public class FirstApplication {
 
 把它当成一个java类运行就可以了，右键菜单中选择，如图：
 
-![img](assets/1240732-20171210190955396-606058819.png)
+![img](https://ws2.sinaimg.cn/large/006tNc79ly1fyulivgwzcj309z07kaa9.jpg)
 
 运行信息：
-![img](assets/1240732-20171210191115740-1641227994.png)
+![img](https://ws2.sinaimg.cn/large/006tNc79ly1fyuliz771vj30y90e80wm.jpg)
 
 8. 运行结果，如图：
 
-![img](assets/1240732-20171210191207115-1995148064.png)
+![img](https://ws3.sinaimg.cn/large/006tNc79ly1fyulj1kf41j309004b0sq.jpg)

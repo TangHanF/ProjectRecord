@@ -4,6 +4,20 @@
 
 一个想变成公共知识库的Project 😂
 
+
+# 注意！注意！注意！
+
+为了增强阅读性以及规范性，真正体验出一个知识库的作用，本项目转为Gitbook项目，迁移至新的Github库以及Gitee库，地址如下：
+
+- Github：[https://github.com/TangHanF/project_record_book](https://github.com/TangHanF/project_record_book)
+- Gitee:[https://gitee.com/TangHanF/project_record_book](https://gitee.com/TangHanF/project_record_book)
+
+欢迎各位Star、Fork，让我们共同构建一个知识库！！！！
+
+
+
+
+
 ------
 
 # GitHub地址

@@ -485,6 +485,13 @@ $("#btnAdd").click(function () {
         </script>
     ```
 
+- Layer全局关闭
+
+```javascript
+var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+parent.layer.close(index); //再执行关闭
+```
+
 - 将弹窗扩展到整个屏幕，而非仅局限于父元素中
 
     ![](https://ws3.sinaimg.cn/large/006tKfTcly1frg09u0w7dj30ni09qweu.jpg)
